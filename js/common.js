@@ -1,5 +1,5 @@
 const ENV = new Map();
-let cn = 'twwwsohlacol';
+let cn = 'tsohlacol';
 // console.log("cn: ", conv('')); // test cn
 
 const loadEnv = async () => {
