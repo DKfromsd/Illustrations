@@ -1,24 +1,24 @@
 'use strict';
 
-const featTitle = `Why Choose Cyber Security Assist?`;
+const featTitle = `How to start immersive time with kids?`;
 
-const feat1Title = `Protecting from<br/> Cyber Threats`;
+const feat1Title = `Draw<br/> Your Kids future`;
 const feat1Desc = `
-  At Cyber Security Assist, we understand the unique challenges small businesses face in today's digital landscape. Cyber threats are constantly evolving, and having a robust security framework is essential to protect your valuable data and maintain the trust of your customers.<br/> That's why we are committed to helping small businesses like yours fortify their digital defenses.
+  At this moment, we understand how your kids and community are distracted by noise flooding into their eyes. Distraction threats are constantly evolving, and having a robust education framework is essential to protect your child's power to concentration and perseverance via visional information.<br/> That's why we are committed to helping childrens by classic illustrations of children's book to fortify their future.
 `;
 
-const feat2Title = `Free Consultation for Small Business`;
-const feat2Desc = `We offer expert consultations on cyber security best practices, specifically tailored for small businesses. Our free consultation service is designed to provide you with accessible, practical, and effective strategies to enhance your cyber security. Whether you're just starting to build your security framework or need to refine your existing measures, our experienced professionals are here to guide you.`;
+const feat2Title = `Free Quotation for Group lessons and portfolio preparation`;
+const feat2Desc = `We offer expert consultations on fine art and illustration best practices, specifically boarding school and college portfolio for 8th and 11th. Our free consultation service is designed to provide your child with accessible, practical, and effective strategies to enhance your child's skills and discipline. Whether your child's just starting to build a fine art framework or need to refine their professional skills, our experienced professionals are here to guide you and your children.`;
 // const feat2Desc = `
 //     Novice website creators often overlook critical features such as <a target='_blank' href='https://developer.mozilla.org/en-US/docs/Glossary/Semantics'>semantic design</a>, <a target='_blank' href='https://www.w3schools.com/html/html_responsive.asp'>mobile responsiveness</a>, <a target='_blank' href='https://www.ada.gov/resources/web-guidance/'>accessibility</a>, and <a target='_blank' href='https://developers.google.com/search/docs#what-is-seo '>SEO optimization</a>.<br/><br/>                    
 //     Our Starter Kit ensures your website meets the modern web standards while enhancing your business credibility. With a custom domain name and a polished appearance, our kit simplifies professional website development.
 // `;
 
-const feat3Title = `Zero Maintenance Costs`;
+const feat3Title = `Guaranteed Skills up Quality`;
 const feat3Desc = `
-    Yes! We really mean <span class='tile-text-bold'>"Free"</span><br/><br/>
-    We guide you through deploying your website on <span class='tile-text-bold'>ad-free</span> and  <span class='tile-text-bold'>reliable</span> web hosting. Once we deliver your website, you have full ownership of your domain and website, giving you complete control over your online presence.<br/><br/>
-    The only optional ongoing expense is the annual domain registration (around $12 per year).
+    Yes! We really mean <span class='tile-text-bold'>"Guarantee"</span><br/><br/>
+    We guide you through deploying your portfolio on <span class='tile-text-bold'>ad-free</span> and  <span class='tile-text-bold'>reliable</span> publishing. Once we deliver the guideline, you have full ownership of your portfolio, giving you complete control over your presence.<br/><br/>
+    The only optional ongoing expense is the retouch cost (around $120 per piece).
 `;
 
 const fillStaticText = () => {
