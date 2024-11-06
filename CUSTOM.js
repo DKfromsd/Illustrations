@@ -4,12 +4,12 @@
  * Anthony note: Changing these texts may cause severe side effects. 
  * Please beware of changing the length of texts and number of words. 
  */
-const phrase1 = `Illustrations`;
+const phrase1 = `Childrens Illustrations`;
 // const phrase2 = `Add your colors on your kid's future`;
 const phrase3 = `Childrens Book`;
 const phrase4 = `Bring attentions`;
-const phrase5 = `Nurture your kids`;
-const phrase6 = `Draw futures with their dreams`;
+const phrase5 = `Nurture Childrens`;
+const phrase6 = `Draw Dreams`;
 
 const email = `info@rysonconsulting.com`;
 const phone = `(123) 456-7890`;
