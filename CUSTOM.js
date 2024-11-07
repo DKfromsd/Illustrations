@@ -4,22 +4,22 @@
  * Anthony note: Changing these texts may cause severe side effects. 
  * Please beware of changing the length of texts and number of words. 
  */
-const phrase1 = `Childrens Illustrations`;
+const phrase1 = `Childrend's Books Illustration`;
 // const phrase2 = `Add your colors on your kid's future`;
-const phrase3 = `Childrens Book`;
-const phrase4 = `Bring attentions`;
-const phrase5 = `Nurture Childrens`;
-const phrase6 = `Draw Dreams`;
+const phrase3 = `Classic Children's Books`;
+const phrase4 = `Modern Childrens Books `;
+const phrase5 = `Educate Illustrations`;
+const phrase6 = `Illustrations Solutions`;
 
-const email = `info@rysonconsulting.com`;
+const email = `info@penfromthenorthwest.com`;
 const phone = `(123) 456-7890`;
 
 const messageSuccess = `Your request is successfully sent.`;
-const messageFail = `Sorry my mailbox is not set up yet. Please email us at info@rysonconsulting.com`;
+const messageFail = `Sorry my mailbox is not set up yet. Please email us at info@penfromthenorthwest.com`;
 
 const mainDesc = `
-    We offer a personalized Web Starter Kit at a minimal cost, providing everything you need to 
-    jumpstart your website. With our service, you can present your business online with a custom domain 
-    in an ad-free environment within a couple of hours.
+    We offer illustartion services for children's books at a minimal cost, providing every process for what you need to 
+    start your childrens' book. With our service, you can present your writings with various styles you want  
+    with a free conslutation within a couple of hours.
 `;
 

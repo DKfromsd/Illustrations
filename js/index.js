@@ -1,31 +1,31 @@
 'use strict';
 
-const featTitle = `Why Choose Cyber Security Assist?`;
+const featTitle = `Why Choose Pen from the North West?`;
 
-const feat1Title = `Protecting from<br/> Cyber Threats`;
+const feat1Title = `Classic FineArt<br/> Modern Comics`;
 const feat1Desc = `
-  At Cyber Security Assist, we understand the unique challenges small businesses face in today's digital landscape. Cyber threats are constantly evolving, and having a robust security framework is essential to protect your valuable data and maintain the trust of your customers.<br/> That's why we are committed to helping small businesses like yours fortify their digital defenses.
+  At Pen from the North West, we understand the unique style of each children's book that the writer wants to present. Authentic scent from the writing that inexperienced designer's artworks cannot align with, can be ensured by our process and solutions so that your writings can be visualized to childrens with the style you want to present.<br/> That's why we are committed to helping independent writers.
 `;
 
-const feat2Title = `Free Consultation for Small Business`;
-const feat2Desc = `We offer expert consultations on cyber security best practices, specifically tailored for small businesses. Our free consultation service is designed to provide you with accessible, practical, and effective strategies to enhance your cyber security. Whether you're just starting to build your security framework or need to refine your existing measures, our experienced professionals are here to guide you.`;
+const feat2Title = `Free Consultation for Beginner Writers`;
+const feat2Desc = `We offer expert consultations on best practices, specifically tailored for custom styles. Our free consultation service is designed to provide you with accessible, practical, and effective process to publish your writings. Whether you're just starting to build your writer careers for children's books or need to migrate your preproduction to commercial publish, our experienced professionals are here to guide you.`;
 // const feat2Desc = `
 //     Novice website creators often overlook critical features such as <a target='_blank' href='https://developer.mozilla.org/en-US/docs/Glossary/Semantics'>semantic design</a>, <a target='_blank' href='https://www.w3schools.com/html/html_responsive.asp'>mobile responsiveness</a>, <a target='_blank' href='https://www.ada.gov/resources/web-guidance/'>accessibility</a>, and <a target='_blank' href='https://developers.google.com/search/docs#what-is-seo '>SEO optimization</a>.<br/><br/>                    
 //     Our Starter Kit ensures your website meets the modern web standards while enhancing your business credibility. With a custom domain name and a polished appearance, our kit simplifies professional website development.
 // `;
 
-const feat3Title = `Zero Maintenance Costs`;
+const feat3Title = `Zero Consultation Costs`;
 const feat3Desc = `
     Yes! We really mean <span class='tile-text-bold'>"Free"</span><br/><br/>
-    We guide you through deploying your website on <span class='tile-text-bold'>ad-free</span> and  <span class='tile-text-bold'>reliable</span> web hosting. Once we deliver your website, you have full ownership of your domain and website, giving you complete control over your online presence.<br/><br/>
-    The only optional ongoing expense is the annual domain registration (around $12 per year).
+    We guide you through the process of publish <span class='tile-text-bold'>books</span> and  <span class='tile-text-bold'>reliable</span> web hosting. Once we deliver your writings.<br/><br/>
+    The only optional ongoing expense is the maintenance cost upon change requests (around $120 per piece).
 `;
 
 const fillStaticText = () => {
   const phrase1Arr = phrase1.split(' ');
   getEl('js-title').innerHTML = phrase1;
   getEl('js-main-title').innerHTML = `${phrase1Arr[0]}<br/>${phrase1Arr[1]} ${phrase1Arr[2]}`;
-  getEl('js-main-title').innerHTML = `Cyber Security Solutions`;
+  getEl('js-main-title').innerHTML = `Childrend's Books Illustration`;
   // getEl('js-main-desc').innerHTML = mainDesc;
   getEl('js-feat1-title').innerHTML = `${feat1Title}<br/>`;
   getEl('js-feat2-title').innerHTML = `${feat2Title}<br/>`;
@@ -38,7 +38,7 @@ const fillStaticText = () => {
   // getEl('js-feat3-desc').innerHTML = feat3Desc;
   // getEl('js-contact-desc').innerHTML = `If you want to experience our web services, please fill out the form below or contact us directly at <a href='mailto:${email}'>${email}</a> or ${phone}`;
 
-  getEl('js-contact-desc').innerHTML = `Getting started with Cyber Security Assist is easy. Simply sign up for our free consultation, and one of our experts will get in touch with you to discuss your specific needs and challenges.<br/> Together, we'll develop a comprehensive plan to enhance your cyber security and protect your business from potential threats.`;
+  getEl('js-contact-desc').innerHTML = `Getting started with Pen from the North West's Children's Books is easy. Simply sign up for our free consultation, and one of our experts will get in touch with you to discuss your specific needs and challenges.<br/> Together, we'll align illustration to your writings`;
 
   getEl('js-contact-form').innerHTML = `<div class="contact-form-row">
     <div class="contact-form-text">
@@ -53,12 +53,12 @@ const fillStaticText = () => {
       <select class="form-textbox-input form-dropdown-select" data-ignore-tracking="true" id="js-form-service" aria-labelledby="services-dropdown_label">
         <option disabled selected="" value="">Select a service type</option>
         <option class="services-dropdown-item" value="Starter Kit">Free Consulting</option>
-        <option class="services-dropdown-item" value="Consulting">Tech Supports</option>
+        <option class="services-dropdown-item" value="Consulting">Change Supports</option>
         <option class="services-dropdown-item" value="Others">Others</option>
       </select>
     </div>
   </div>
-  <textarea placeholder="Please briefly explain your business and security needs." class="form-textbox-input contact-form-textarea" name="message" rows="10" required></textarea>
+  <textarea placeholder="Please briefly explain your needs." class="form-textbox-input contact-form-textarea" name="message" rows="10" required></textarea>
   <button type='submit' class='button-blue'>Send your request</button>
   `;
 
