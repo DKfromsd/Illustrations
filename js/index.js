@@ -24,8 +24,8 @@ const feat3Desc = `
 const fillStaticText = () => {
   const phrase1Arr = phrase1.split(' ');
   getEl('js-title').innerHTML = phrase1;
-  getEl('js-main-title').innerHTML = `${phrase1Arr[0]}<br/>${phrase1Arr[1]} ${phrase1Arr[2]}`;
-  getEl('js-main-title').innerHTML = `Childrend's Books Illustration`;
+  getEl('js-main-title').innerHTML = `${phrase1Arr[0]}<br/>${phrase1Arr[1]} ${phrase1Arr[2]}<br/>${phrase1Arr[3]}`;
+  //getEl('js-main-title').innerHTML = `Childrend's Books Illustration`;
   // getEl('js-main-desc').innerHTML = mainDesc;
   getEl('js-feat1-title').innerHTML = `${feat1Title}<br/>`;
   getEl('js-feat2-title').innerHTML = `${feat2Title}<br/>`;
@@ -73,16 +73,26 @@ const renderBanner = async () => {
   await elapseTime(500);
   getEl('js-header').scrollIntoView();
   await elapseTime(1500);
+
   await typeText('js-type-01', phraseArr[0], 70);
   await elapseTime(300);
   getEl('js-space-01').classList.remove('hidden');
   // getEl('js-next-01').classList.remove('hidden');
   if (isMobile())getEl('js-next-01').classList.remove('hidden'); 
+  
   await typeText('js-type-02', phraseArr[1], 100);
   getEl('js-space-02').classList.remove('hidden');
-  // if (isMobile())getEl('js-next-02').classList.remove('hidden'); 
   getEl('js-next-02').classList.remove('hidden');
-  await typeText('js-type-03', phraseArr[2], 40);
+  
+  await typeText('js-type-03', phraseArr[2], 100);
+  getEl('js-space-03').classList.remove('hidden');
+  // if (isMobile())getEl('js-next-02').classList.remove('hidden'); 
+  getEl('js-next-03').classList.remove('hidden');
+  
+  await typeText('js-type-04', phraseArr[3], 40);
+  getEl('js-space-04').classList.remove('hidden');
+  getEl('js-next-04').classList.remove('hidden');
+  
   blinkCaret(true);
   getEl('js-main-img-1').classList.add('bw-opacity-trans');
   await elapseTime(2000);
@@ -115,12 +125,15 @@ const renderBanner = async () => {
   moveCaret('js-type-01');
   await typeText('js-type-01', phrase3Arr[0], 50);
   getEl('js-space-01').classList.remove('hidden');
+  if (isMobile())getEl('js-next-01').classList.remove('hidden');
+  
   await typeText('js-type-02', phrase3Arr[1], 100);
   getEl('js-space-02').classList.remove('hidden');
   if (isMobile())getEl('js-next-02').classList.remove('hidden'); 
+  
   await typeText('js-type-03', phrase3Arr[2], 20);
+  getEl('js-space-03').classList.remove('hidden');
   await elapseTime(1000);
-
   await selectText('js-type-03', 50);
   await elapseTime(1000);
   getEl('js-type-03').innerHTML = '';

@@ -7,7 +7,7 @@
 const phrase1 = 'Pen from the Northwest';
 // const phrase2 = `Add your colors on your kid's future`;
 const phrase3 = `Classic Children's Books`;
-const phrase4 = `Modern Childrens Books `;
+const phrase4 = `Modern Children's Books`;
 const phrase5 = `Educate Illustrations`;
 const phrase6 = `Illustrations Solutions`;
 
