@@ -4,7 +4,7 @@
  * Anthony note: Changing these texts may cause severe side effects. 
  * Please beware of changing the length of texts and number of words. 
  */
-const phrase1 = `Childrend's Books Illustration`;
+const phrase1 = 'Pen from the Northwest';
 // const phrase2 = `Add your colors on your kid's future`;
 const phrase3 = `Classic Children's Books`;
 const phrase4 = `Modern Childrens Books `;
