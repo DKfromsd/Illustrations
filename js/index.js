@@ -9,10 +9,6 @@ const feat1Desc = `
 
 const feat2Title = `Free Consultation for Beginner Writers`;
 const feat2Desc = `We offer expert consultations on best practices, specifically tailored for custom styles. Our free consultation service is designed to provide you with accessible, practical, and effective process to publish your writings. Whether you're just starting to build your writer careers for children's books or need to migrate your preproduction to commercial publish, our experienced professionals are here to guide you.`;
-// const feat2Desc = `
-//     Novice website creators often overlook critical features such as <a target='_blank' href='https://developer.mozilla.org/en-US/docs/Glossary/Semantics'>semantic design</a>, <a target='_blank' href='https://www.w3schools.com/html/html_responsive.asp'>mobile responsiveness</a>, <a target='_blank' href='https://www.ada.gov/resources/web-guidance/'>accessibility</a>, and <a target='_blank' href='https://developers.google.com/search/docs#what-is-seo '>SEO optimization</a>.<br/><br/>                    
-//     Our Starter Kit ensures your website meets the modern web standards while enhancing your business credibility. With a custom domain name and a polished appearance, our kit simplifies professional website development.
-// `;
 
 const feat3Title = `Zero Consultation Costs`;
 const feat3Desc = `
@@ -35,10 +31,8 @@ const fillStaticText = () => {
   getEl('js-feat-title').innerHTML = featTitle;
   getEl('js-feat1-desc').innerHTML = feat1Desc;
   getEl('js-feat2-desc').innerHTML = feat2Desc;
-  // getEl('js-feat3-desc').innerHTML = feat3Desc;
-  // getEl('js-contact-desc').innerHTML = `If you want to experience our web services, please fill out the form below or contact us directly at <a href='mailto:${email}'>${email}</a> or ${phone}`;
 
-  getEl('js-contact-desc').innerHTML = `Getting started with Pen from the North West's Children's Books is easy. Please feel free to contact us directly at <a href='mailto:${email}'>${email}</a> Simply send questions for our free consultation, and one of our experts will get in touch with you to discuss your specific needs and challenges. Together, we'll align illustration to your writings.`;
+  getEl('js-contact-desc').innerHTML = `Getting started with Pen from the North West's Children's Books is easy. Please feel free to contact us directly at <a href='mailto:${email}'>${email}</a> `; // or ${phone} `;
 
   // getEl('js-contact-form').innerHTML = `<div class="contact-form-row">
   //   <div class="contact-form-text">
@@ -62,7 +56,7 @@ const fillStaticText = () => {
   // <button type='submit' class='button-blue'>Send your request</button>
   // `;
 
-  getEl('js-footer').innerHTML = `© 2024 ${phrase1}`;
+  getEl('js-footer').innerHTML = `© 2025 ${phrase1}`;
 }
 
 const renderBanner = async () => {
@@ -95,7 +89,7 @@ const renderBanner = async () => {
   
   blinkCaret(true);
   getEl('js-main-img-1').classList.add('bw-opacity-trans');
-  await elapseTime(2000);
+  await elapseTime(2500); // 2000 to 2500
 
   // await selectText('js-type-01', 50);
   // await elapseTime(1000);
@@ -117,51 +111,68 @@ const renderBanner = async () => {
   // blinkCaret(true);
   // await elapseTime(1500);
    
-  await initBanner(0);
+  await initBanner(100); // 0 to 100
   
   if (!isMobile()) getEl('js-banner-wr').style.lineHeight = 2;
   
   const phrase3Arr = phrase3.split(' ');
   moveCaret('js-type-01');
-  await typeText('js-type-01', phrase3Arr[0], 50);
+  // Set phrase3 to white
+  getEl('js-type-01').style.color = '#fff';
+  await typeText('js-type-01', phrase3Arr[0], 100);
   getEl('js-space-01').classList.remove('hidden');
   if (isMobile())getEl('js-next-01').classList.remove('hidden');
   
+  getEl('js-type-02').style.color = '#fff';
   await typeText('js-type-02', phrase3Arr[1], 100);
   getEl('js-space-02').classList.remove('hidden');
   if (isMobile())getEl('js-next-02').classList.remove('hidden'); 
   
-  await typeText('js-type-03', phrase3Arr[2], 20);
+  getEl('js-type-03').style.color = '#fff';  
+  await typeText('js-type-03', phrase3Arr[2], 100);
   getEl('js-space-03').classList.remove('hidden');
   await elapseTime(1000);
   await selectText('js-type-03', 50);
   await elapseTime(1000);
+
   getEl('js-type-03').innerHTML = '';
   moveCaret('js-type-03');
   blinkCaret(false);
 
 
   hideCaret();
-  getEl('js-type-03').style.color = '#a2a2a2';
+  // Set phrase4 to white
+  getEl('js-type-03').style.color = '#fff';//getEl('js-type-03').style.color = '#a2a2a2';
   getEl('js-type-03').innerHTML = phrase4.split(' ')[2];
+  
   moveSwitch('js-next-02');
   await expandSwitch(3);
   await elapseTime(500);
+  
   await turnOnSwitch(20);
+
   getEl('js-type-03').classList.add('font-color-transition');
   getEl('js-main-img-2').classList.add('col-opacity-trans');
   blinkCaret();
 
-  await elapseTime(1500);
+  await elapseTime(1500); // 1500  current delay after ph4 switch
   getEl('js-switch-wr').remove();
-  await initBanner(180);
+  await initBanner(1000); // 180 --> 1000
+
+  // *** NEW LINE ADDED HERE TO CLEAR JS-TYPE-03 ***
+  getEl('js-type-03').innerHTML = ''; // Ensure "Painting" is gone
+  // ***********************************************
+
   const phrase5Arr = phrase5.split(' ');
   
   moveCaret('js-type-01');
-  await elapseTime(1500);
-  await typeText('js-type-01', phrase5Arr[0], 50);
+  await elapseTime(2500);  // 1500 to 2500
+  // Set phrase5 to white
+  getEl('js-type-01').style.color = '#fff';
+  await typeText('js-type-01', phrase5Arr[0], 100);
   getEl('js-space-01').classList.remove('hidden');
   // await typeText('js-type-02', phrase5Arr[1], 100);
+
   getEl('js-space-02').classList.remove('hidden');
   if (isMobile())getEl('js-next-02').classList.remove('hidden'); 
   // await typeText('js-type-03', phrase5Arr[2], 20);
@@ -173,6 +184,7 @@ const renderBanner = async () => {
 
   hideCaret();
   getEl('js-type-03').classList.remove('font-color-transition');
+
   getEl('js-type-03').innerHTML = phrase5.split(' ')[1];
   getEl('js-type-03').style.color = '#fff';
   moveVolume('js-next-02');
@@ -183,10 +195,10 @@ const renderBanner = async () => {
   getEl('js-main-img-3').classList.add('full-opacity-trans'); // color img
   getEl('js-volume-wr').remove(); // remove speaker
   getEl('js-type-03').classList.remove('vol-color-high', 'vol-color-low', 'vol-color-off');
-  await initBanner(30);
+  await initBanner(100);  // 30 to 100
 
   // getEl('js-main-img-3').classList.add('full-opacity-trans');
-  await elapseTime(1500);
+  await elapseTime(2500); // 1500 to 2500
 
   getEl('js-banner-wr').style.textAlign = 'center'; // list one is centered
   if (isMobile()) {

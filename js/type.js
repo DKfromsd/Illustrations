@@ -187,21 +187,31 @@ const turnOnSwitch = async (delay = 10) => {
 }
 
 const initBanner = async (delay = 0) => {
-  getEl('js-type-04').innerHTML = '';
-  await elapseTime(delay);
-  getEl('js-type-02').innerHTML = '';
-  await elapseTime(delay);
-  getEl('js-type-01').innerHTML = '';
+  await elapseTime(delay); // Wait for the specified delay first
+  // getEl('js-type-04').innerHTML = '';
+  // await elapseTime(delay);
+  // getEl('js-type-02').innerHTML = '';
+  // await elapseTime(delay);
+  // getEl('js-type-01').innerHTML = '';
+  getEl('js-type-01').innerHTML = ''; // Clear js-type-01
+  getEl('js-type-02').innerHTML = ''; // Clear js-type-02
+  getEl('js-type-03').innerHTML = ''; // *** ADD THIS LINE *** Clear js-type-03
+  getEl('js-type-04').innerHTML = ''; // Clear js-type-04
 
   getEl('js-space-01').classList.add('hidden');
   getEl('js-space-02').classList.add('hidden');
   getEl('js-next-01').classList.add('hidden');
   getEl('js-next-02').classList.add('hidden');
 
-  getEl('js-space-02').classList.add('hidden');
-  getEl('js-space-03').classList.add('hidden');
-  getEl('js-next-02').classList.add('hidden');
-  getEl('js-next-03').classList.add('hidden');
+  // getEl('js-space-02').classList.add('hidden');
+  // getEl('js-space-03').classList.add('hidden');
+  // getEl('js-next-02').classList.add('hidden');
+  // getEl('js-next-03').classList.add('hidden');
+  getEl('js-space-03').classList.add('hidden'); // This was missing js-space-03, added for completeness
+  getEl('js-next-03').classList.add('hidden'); // This was missing js-next-03, added for completeness
+  getEl('js-space-04').classList.add('hidden'); // This was missing js-space-04, added for completeness
+  getEl('js-next-04').classList.add('hidden'); // This was missing js-next-04, added for completeness
+
 
   getEl('js-type-04').classList.remove('text-subhead'); // 3rd small font reset on mobile
   getEl('js-type-04').style.color = '#1d1d1f';

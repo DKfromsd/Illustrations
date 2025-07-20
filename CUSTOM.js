@@ -6,13 +6,13 @@
  */
 const phrase1 = 'Pen from the Northwest';
 // const phrase2 = `Add your colors on your kid's future`;
-const phrase3 = `Classic Children's Books`;
-const phrase4 = `Modern Children's Books`;
-const phrase5 = `Educate Illustrations`;
+const phrase3 = `Children's Book Drawing`;
+const phrase4 = `Children's Book Painting`;
+const phrase5 = `FineArt Solutions`;
 const phrase6 = `Illustrations Solutions`;
 
 const email = `info@penfromthenorthwest.com`;
-const phone = `(123) 456-7890`;
+const phone = `(425) 469-6381`;
 
 const messageSuccess = `Your request is successfully sent.`;
 const messageFail = `Sorry my mailbox is not set up yet. Please email us at info@penfromthenorthwest.com`;
