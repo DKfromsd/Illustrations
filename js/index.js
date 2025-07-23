@@ -236,6 +236,11 @@ const gotoHome = () => {
   window.location.href = './index.html';
 }
 
+const gotoBlog = () => {
+  window.location.href = './blog.html';
+}
+
+
 const startEventListener = () => {
   startContactListener(); // start listener
 }

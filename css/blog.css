@@ -1,0 +1,26 @@
+.post {
+  border: 1px solid #ccc;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+}
+.post-title {
+  font-size: 1.5em;
+  margin-bottom: 8px;
+}
+.post-content {
+  margin-bottom: 8px;
+}
+.post-image {
+  max-width: 100%;
+  height: auto;
+  margin-top: 8px;
+}
+.post-author {
+  font-style: italic;
+  color: #666;
+}
+.menu.active {
+  font-weight: bold;
+  color: #007bff;
+}
