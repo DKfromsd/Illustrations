@@ -108,7 +108,7 @@ const handlePostSubmit = async e => {
   }
 };
 
-const main = async () => {
+const blogMain = async () => {
   await loadFont();
   if (checkAuth()) {
     getEl('js-login-section').classList.add('hidden');
@@ -119,4 +119,4 @@ const main = async () => {
   displayPosts();
 };
 
-main();
+blogMain();
