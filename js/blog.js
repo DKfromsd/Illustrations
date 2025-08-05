@@ -2,6 +2,14 @@
 
 const API_URL = 'https://go-backend-e4wm.onrender.com/api';
 
+const gotoHome = () => {
+  window.location.href = 'https://penfromthenorthwest.com'; // Use absolute path for Render.com
+};
+
+const gotoBlog = () => {
+  window.location.href = 'https://penfromthenorthwest.com/blog.html'; // Use absolute path for Render.com
+};
+
 const showNotice = (id, message, isSuccess = true) => {
   const noticeEl = getEl(id);
   noticeEl.innerText = message;

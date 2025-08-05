@@ -24,50 +24,52 @@
     </nav>
     <header id="js-header" class="header">
       <div class="text-head-wr">
-        <h1 class="text-head">Children's Books Blog</h1>
+        <1.8rem class="text-head">Children's Books Blog</1.8rem>
       </div>
     </header>
     <main id="js-content" role="content" class="layout-wr">
       <div class="sec-wr">
         <div class="sec-title mb-16px">Family Blog</div>
-        <div id="js-login-section" class="contact-wr">
+        <div id="js-contact" class="contact-wr"> <!-- Added js-contact ID -->
           <div id="js-login-notice" class="notice-wr hidden">
             <div id="js-login-success" class="notice hidden">Login successful!</div>
             <div id="js-login-err" class="notice notice-err hidden">Invalid credentials</div>
           </div>
-          <form id="js-login-form" class="contact-form-wr">
-            <div class="contact-form-row">
-              <div class="contact-form-text">
-                <input type="text" class="form-textbox-input" id="username" name="username" autocomplete="off" placeholder="Username" required aria-label="Enter username">
+          <div id="js-login-section" class="contact-wr">
+            <form id="js-login-form" class="contact-form-wr">
+              <div class="contact-form-row">
+                <div class="contact-form-text">
+                  <input type="text" class="form-textbox-input" id="username" name="username" autocomplete="off" placeholder="Username" required aria-label="Enter username">
+                </div>
+                <div class="contact-form-sp"></div>
+                <div class="contact-form-text">
+                  <input type="password" class="form-textbox-input" id="password" name="password" autocomplete="off" placeholder="Password" required aria-label="Enter password">
+                </div>
               </div>
-              <div class="contact-form-sp"></div>
-              <div class="contact-form-text">
-                <input type="password" class="form-textbox-input" id="password" name="password" autocomplete="off" placeholder="Password" required aria-label="Enter password">
+              <button type="submit" class="button-blue">Login</button>
+            </form>
+          </div>
+          <div id="js-post-form-section" class="contact-wr hidden">
+            <div class="sec-title mb-16px">Create a Post</div>
+            <form id="js-post-form" class="contact-form-wr">
+              <div class="contact-form-row">
+                <div class="contact-form-text">
+                  <input type="text" class="form-textbox-input" id="post-title" name="title" placeholder="Post Title" required aria-label="Enter post title">
+                </div>
               </div>
-            </div>
-            <button type="submit" class="button-blue">Login</button>
-          </form>
-        </div>
-        <div id="js-post-form-section" class="contact-wr hidden">
-          <div class="sec-title mb-16px">Create a Post</div>
-          <form id="js-post-form" class="contact-form-wr">
-            <div class="contact-form-row">
-              <div class="contact-form-text">
-                <input type="text" class="form-textbox-input" id="post-title" name="title" placeholder="Post Title" required aria-label="Enter post title">
+              <textarea placeholder="Write your post here..." class="form-textbox-input contact-form-textarea" name="content" rows="5" required></textarea>
+              <div class="contact-form-row">
+                <input type="file" id="post-image" name="image" accept="image/*" aria-label="Upload image">
               </div>
-            </div>
-            <textarea placeholder="Write your post here..." class="form-textbox-input contact-form-textarea" name="content" rows="5" required></textarea>
-            <div class="contact-form-row">
-              <input type="file" id="post-image" name="image" accept="image/*" aria-label="Upload image">
-            </div>
-            <div class="contact-form-row">
-              <select class="form-textbox-input form-dropdown-select" name="visibility" required aria-label="Select visibility">
-                <option value="public">Public</option>
-                <option value="private">Private</option>
-              </select>
-            </div>
-            <button type="submit" class="button-blue">Submit Post</button>
-          </form>
+              <div class="contact-form-row">
+                <select class="form-textbox-input form-dropdown-select" name="visibility" required aria-label="Select visibility">
+                  <option value="public">Public</option>
+                  <option value="private">Private</option>
+                </select>
+              </div>
+              <button type="submit" class="button-blue">Submit Post</button>
+            </form>
+          </div>
         </div>
         <div id="js-posts-section" class="tile-list-wr">
           <div class="sec-title mb-16px">Posts</div>

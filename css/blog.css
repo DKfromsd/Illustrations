@@ -14,20 +14,26 @@
 }
 
 .header {
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay for readability */
+    background: rgba(0, 0, 0, 0.5);
     padding: 20px;
     text-align: center;
 }
 
 .text-head {
     font-family: 'SF_Pro_Display_Bold', sans-serif;
-    font-size: 2.5rem;
+    font-size: 1.8rem; /* Reduced from 2.5rem */
     color: #fff;
     margin: 0;
 }
 
+@media (max-width: 540px) {
+    .text-head {
+        font-size: 1.2rem; /* Smaller size for mobile */
+    }
+}
+
 .layout-wr {
-    background: rgba(255, 255, 255, 0.9); /* White overlay for content readability */
+    background: rgba(255, 255, 255, 0.9);
     margin: 20px auto;
     padding: 20px;
     max-width: 800px;
