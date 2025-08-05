@@ -3,11 +3,11 @@
 const API_URL = 'https://go-backend-e4wm.onrender.com/api';
 
 const gotoHome = () => {
-  window.location.href = 'https://penfromthenorthwest.com'; // Use absolute path for Render.com
+  window.location.href = 'https://penfromthenorthwest.com/index.html'; // Replace with your frontend domain
 };
 
 const gotoBlog = () => {
-  window.location.href = 'https://penfromthenorthwest.com/blog.html'; // Use absolute path for Render.com
+  window.location.href = 'https://penfromthenorthwest.com/blog.html'; // Replace with your frontend domain
 };
 
 const showNotice = (id, message, isSuccess = true) => {
@@ -29,18 +29,28 @@ const displayPosts = async () => {
     const jwt = localStorage.getItem('jwt');
     if (jwt) headers['Authorization'] = `Bearer ${jwt}`;
     const response = await fetch(`${API_URL}/posts`, { headers });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     const posts = await response.json();
-    posts.forEach(post => {
-      const postEl = document.createElement('div');
-      postEl.className = 'post';
-      postEl.innerHTML = `
-        <div class="post-title">${post.title}</div>
-        <div class="post-content">${post.content}</div>
-        ${post.image_url ? `<img class="post-image" src="${post.image_url}" alt="Post image">` : ''}
-        <div class="post-author">Posted by ${post.author} on ${new Date(post.created_at).toLocaleDateString()}</div>
-      `;
-      postsEl.appendChild(postEl);
-    });
+    console.log('Fetched posts:', posts); // Debug log
+    // Sort posts by created_at (newest first)
+    posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    if (posts.length === 0) {
+      postsEl.innerHTML = '<div class="post">No posts available.</div>';
+    } else {
+      posts.forEach(post => {
+        const postEl = document.createElement('div');
+        postEl.className = 'post';
+        postEl.innerHTML = `
+          <div class="post-title">${post.title}</div>
+          <div class="post-content">${post.content}</div>
+          ${post.image_url ? `<img class="post-image" src="${post.image_url}" alt="Post image">` : ''}
+          <div class="post-author">Posted by ${post.author} on ${new Date(post.created_at).toLocaleDateString()}</div>
+        `;
+        postsEl.appendChild(postEl);
+      });
+    }
   } catch (error) {
     console.error('Error fetching posts:', error);
     showNotice('js-login-err', 'Failed to load posts', false);
@@ -70,6 +80,7 @@ const handleLogin = async e => {
       showNotice('js-login-err', 'Invalid credentials', false);
     }
   } catch (error) {
+    console.error('Login error:', error);
     showNotice('js-login-err', 'Login failed', false);
   }
 };
@@ -89,6 +100,8 @@ const handlePostSubmit = async e => {
     });
     if (uploadResponse.ok) {
       imageUrl = (await uploadResponse.json()).image_url;
+    } else {
+      console.error('Image upload failed:', uploadResponse.status);
     }
   }
   const response = await fetch(`${API_URL}/posts`, {
@@ -109,6 +122,7 @@ const handlePostSubmit = async e => {
     showNotice('js-login-success', 'Post created!');
     displayPosts();
   } else {
+    console.error('Post creation failed:', response.status);
     showNotice('js-login-err', 'Failed to create post', false);
   }
 };
