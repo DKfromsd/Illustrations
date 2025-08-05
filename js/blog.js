@@ -1,9 +1,6 @@
 'use strict';
 
-// Replace with your new API endpoint (e.g., Render, Fly.io, Vercel, or Deta)
-const API_URL = 'https://go-backend-e4wm.onrender.com/api'; 
-//const API_URL = 'https://go-backend.onrender.com/api'; // Render
-// Example for Render
+const API_URL = 'https://go-backend-e4wm.onrender.com/api';
 
 const showNotice = (id, message, isSuccess = true) => {
   const noticeEl = getEl(id);
@@ -108,7 +105,7 @@ const handlePostSubmit = async e => {
   }
 };
 
-const blogMain = async () => {
+const main = async () => {
   await loadFont();
   if (checkAuth()) {
     getEl('js-login-section').classList.add('hidden');
@@ -119,4 +116,4 @@ const blogMain = async () => {
   displayPosts();
 };
 
-blogMain();
+main();
