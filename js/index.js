@@ -68,27 +68,36 @@ const renderBanner = async () => {
   getEl('js-header').scrollIntoView();
   await elapseTime(1500);
 
+  // Pen
   await typeText('js-type-01', phraseArr[0], 70);
   await elapseTime(300);
   getEl('js-space-01').classList.remove('hidden');
   // getEl('js-next-01').classList.remove('hidden');
   if (isMobile())getEl('js-next-01').classList.remove('hidden'); 
   
+  //From
   await typeText('js-type-02', phraseArr[1], 100);
   getEl('js-space-02').classList.remove('hidden');
   getEl('js-next-02').classList.remove('hidden');
   
+  //The
   await typeText('js-type-03', phraseArr[2], 100);
   getEl('js-space-03').classList.remove('hidden');
   // if (isMobile())getEl('js-next-02').classList.remove('hidden'); 
   getEl('js-next-03').classList.remove('hidden');
   
+  //Northwest
   await typeText('js-type-04', phraseArr[3], 40);
   getEl('js-space-04').classList.remove('hidden');
   getEl('js-next-04').classList.remove('hidden');
   
   blinkCaret(true);
   getEl('js-main-img-1').classList.add('bw-opacity-trans');
+  // Change phrase1 to white after bw-opacity-trans
+  getEl('js-type-01').style.color = '#fff';
+  getEl('js-type-02').style.color = '#fff';
+  getEl('js-type-03').style.color = '#fff';
+  getEl('js-type-04').style.color = '#fff';
   await elapseTime(2500); // 2000 to 2500
 
   // await selectText('js-type-01', 50);
@@ -123,12 +132,12 @@ const renderBanner = async () => {
   getEl('js-space-01').classList.remove('hidden');
   if (isMobile())getEl('js-next-01').classList.remove('hidden');
   
-  getEl('js-type-02').style.color = '#fff';
+  getEl('js-type-02').style.color =  '#fff';
   await typeText('js-type-02', phrase3Arr[1], 100);
   getEl('js-space-02').classList.remove('hidden');
   if (isMobile())getEl('js-next-02').classList.remove('hidden'); 
   
-  getEl('js-type-03').style.color = '#fff';  
+  getEl('js-type-03').style.color =  '#fff';  
   await typeText('js-type-03', phrase3Arr[2], 100);
   getEl('js-space-03').classList.remove('hidden');
   await elapseTime(1000);
@@ -138,8 +147,6 @@ const renderBanner = async () => {
   getEl('js-type-03').innerHTML = '';
   moveCaret('js-type-03');
   blinkCaret(false);
-
-
   hideCaret();
   // Set phrase4 to white
   getEl('js-type-03').style.color = '#fff';//getEl('js-type-03').style.color = '#a2a2a2';
@@ -150,43 +157,35 @@ const renderBanner = async () => {
   await elapseTime(500);
   
   await turnOnSwitch(20);
-
   getEl('js-type-03').classList.add('font-color-transition');
   getEl('js-main-img-2').classList.add('col-opacity-trans');
+  getEl('js-type-03').style.color = '#fff';
   blinkCaret();
-
-  await elapseTime(1500); // 1500  current delay after ph4 switch
+  await elapseTime(1000); // 1500  current delay after ph4 switch
   getEl('js-switch-wr').remove();
-  await initBanner(1000); // 180 --> 1000
+  await initBanner(300); // 180 --> 1000
 
   // *** NEW LINE ADDED HERE TO CLEAR JS-TYPE-03 ***
   getEl('js-type-03').innerHTML = ''; // Ensure "Painting" is gone
   // ***********************************************
 
   const phrase5Arr = phrase5.split(' ');
-  
+  // FineArt Solutions 
   moveCaret('js-type-01');
-  await elapseTime(2500);  // 1500 to 2500
+  await elapseTime(1000);  // 1500 to 2500
   // Set phrase5 to white
   getEl('js-type-01').style.color = '#fff';
   await typeText('js-type-01', phrase5Arr[0], 100);
   getEl('js-space-01').classList.remove('hidden');
-  // await typeText('js-type-02', phrase5Arr[1], 100);
-
   getEl('js-space-02').classList.remove('hidden');
   if (isMobile())getEl('js-next-02').classList.remove('hidden'); 
-  // await typeText('js-type-03', phrase5Arr[2], 20);
   await elapseTime(500);
-
-  // await elapseTime(2000);
   getEl('js-type-03').innerHTML = '';
   moveCaret('js-type-03');
-
   hideCaret();
-  getEl('js-type-03').classList.remove('font-color-transition');
-
-  getEl('js-type-03').innerHTML = phrase5.split(' ')[1];
   getEl('js-type-03').style.color = '#fff';
+  getEl('js-type-03').innerHTML = phrase5.split(' ')[1];
+  getEl('js-type-03').classList.remove('font-color-transition');
   moveVolume('js-next-02');
   await startVolume('js-type-03', 500);
   blinkCaret();
@@ -196,8 +195,7 @@ const renderBanner = async () => {
   getEl('js-volume-wr').remove(); // remove speaker
   getEl('js-type-03').classList.remove('vol-color-high', 'vol-color-low', 'vol-color-off');
   await initBanner(100);  // 30 to 100
-
-  // getEl('js-main-img-3').classList.add('full-opacity-trans');
+  getEl('js-main-img-3').classList.add('full-opacity-trans');
   await elapseTime(2500); // 1500 to 2500
 
   getEl('js-banner-wr').style.textAlign = 'center'; // list one is centered
@@ -208,6 +206,7 @@ const renderBanner = async () => {
   }
 
   const phrase6Arr = phrase6.split(' ');
+  // Illustration Solutions
 
   if (isMobile()) getEl('js-banner-wr').style.paddingLeft = 0;
   getEl('js-type-01').style.color = '#fff';
@@ -220,6 +219,7 @@ const renderBanner = async () => {
   // await typeText('js-type-02', phrase6Arr[1], 100);
   getEl('js-space-02').classList.remove('hidden');
   if (isMobile())getEl('js-next-02').classList.remove('hidden'); 
+  getEl('js-type-03').style.color = '#fff';
   await typeText('js-type-03', phrase6Arr[1], 40);
   await elapseTime(1500);
 
