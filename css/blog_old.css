@@ -41,7 +41,7 @@
 .text-head {
     font-family: 'SF_Pro_Display_Bold', sans-serif;
     font-size:3.75rem; /* ~60px, larger than 1.8rem (~28.8px) */
-    color: #fff;
+    color: #27db30;
     margin: 0;
     font-weight: bold;
     transition: opacity 0.5s ease; /* For animation */

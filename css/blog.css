@@ -19,7 +19,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 300px; /* Shortened from 100vh */
+    min-height: 300px; /* Shortened from 100vh */
     background-image: url('../img/banner-col.jpg');
     background-size: cover;
     background-position: center;
@@ -32,14 +32,15 @@
         min-height: 200px; /* Shortened for mobile */
     }
 }
+
 .text-head-wr {
     text-align: center;
 }
 
 .text-head {
     font-family: 'SF_Pro_Display_Bold', sans-serif;
-    font-size: 3.75rem;  /* ~60px */
-    color: #ebdede;
+    font-size: 3.75rem; /* ~60px */
+    color: #53c924 !important; /* Ensure green color */
     font-weight: bold;
     margin: 0;
     transition: opacity 0.5s ease;
@@ -49,9 +50,6 @@
     .text-head {
         font-size: 3rem; /* ~48px */
     }
-    /* .header {
-        min-height: 200px;
-    } */
 }
 
 .menu-wr {
@@ -71,18 +69,18 @@
 .menu {
     font-family: 'SF_Pro_Display_Semibold', sans-serif;
     font-size: 21px;
-    color: #fff;
+    color: #53c924 !important; /* Ensure green color */
     margin-left: 40px;
     cursor: pointer;
     transition: color 0.3s ease;
 }
 
 .menu:hover {
-    color: #fff;
+    color: #2fe047 !important; /* Ensure hover green */
 }
 
 .menu.active {
-    color: #fff;
+    color: #1fdb4e !important; /* Ensure active green */
 }
 
 @media (max-width: 540px) {
@@ -176,7 +174,7 @@
     padding: 8px;
     box-sizing: border-box;
     background-color: #FFF;
-    color: #fff;
+    color: #13c413 !important; /* Ensure green button text */
     border: none;
     cursor: pointer;
     font-size: 16px;
