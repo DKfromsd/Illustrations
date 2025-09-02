@@ -1,5 +1,13 @@
 const CLOUD_FUNCTIONS_URL = 'https://us-central1-pen-from-the-northwest-blog.cloudfunctions.net/api';
 
+const gotoHome = () => {
+  window.location.href = 'https://penfromthenorthwest.com/index.html'; // Replace with your frontend domain
+};
+const gotoBlog = () => {
+  window.location.href = 'https://penfromthenorthwest.com/blog.html'; // Replace with your frontend domain
+};
+
+
 // Show notice (for login success/error)
 function showNotice(isSuccess, message) {
     const successNotice = document.getElementById('js-login-success');
