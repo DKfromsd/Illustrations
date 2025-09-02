@@ -18,7 +18,7 @@ function showNotice(isSuccess, message) {
 // Handle login (backend-based)
 async function handleLogin(username, password) {
     try {
-        const response = await fetch(`${CLOUD_FUNCTIONS_URL}/api/login`, {
+        const response = await fetch(`${CLOUD_FUNCTIONS_URL}/login`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({username, password})
@@ -49,7 +49,7 @@ async function handlePostSubmit(e) {
 
     try {
         console.log('Sending POST to /api/createPost');
-        const response = await fetch(`${CLOUD_FUNCTIONS_URL}/api/createPost`, {
+        const response = await fetch(`${CLOUD_FUNCTIONS_URL}/createPost`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ async function handlePostSubmit(e) {
 // Display posts
 async function displayPosts() {
     try {
-        const response = await fetch(`${CLOUD_FUNCTIONS_URL}/api/getPosts`, {
+        const response = await fetch(`${CLOUD_FUNCTIONS_URL}/getPosts`, {
             headers: {'Authorization': `Bearer ${localStorage.getItem('jwt') || ''}`}
         });
         const posts = await response.json();
