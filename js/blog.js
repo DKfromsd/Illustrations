@@ -1,23 +1,5 @@
 // blog.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
-
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
+const CLOUD_FUNCTIONS_URL = 'https://us-central1-pen-from-the-northwest-blog.cloudfunctions.net'; // Update with your region/project
 
 const getEl = id => document.getElementById(id);
 const showNotice = (id, message, isSuccess) => {
@@ -28,20 +10,31 @@ const showNotice = (id, message, isSuccess) => {
   setTimeout(() => el.classList.add('hidden'), 3000);
 };
 
-const checkAuth = () => !!auth.currentUser;
-
 const handleLogin = async e => {
   e.preventDefault();
   const data = new FormData(e.target);
   try {
-    await auth.signInWithEmailAndPassword(data.get('username'), data.get('password'));
-    getEl('js-login-section').classList.add('hidden');
-    getEl('js-post-form-section').classList.remove('hidden');
-    showNotice('js-login-success', 'Login successful!', true);
-    displayPosts();
+    const response = await fetch(`${CLOUD_FUNCTIONS_URL}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: data.get('username'),
+        password: data.get('password')
+      })
+    });
+    if (response.ok) {
+      const { token } = await response.json();
+      localStorage.setItem('jwt', token);
+      getEl('js-login-section').classList.add('hidden');
+      getEl('js-post-form-section').classList.remove('hidden');
+      showNotice('js-login-success', 'Login successful!', true);
+      displayPosts();
+    } else {
+      showNotice('js-login-err', 'Invalid credentials', false);
+    }
   } catch (error) {
     console.error('Login error:', error);
-    showNotice('js-login-err', 'Invalid credentials', false);
+    showNotice('js-login-err', 'Login failed', false);
   }
 };
 
@@ -50,40 +43,30 @@ const handlePostSubmit = async e => {
   const data = new FormData(e.target);
   const contentEl = getEl('post-content');
   const textContent = contentEl.textContent.trim();
-  let imageUrl = '';
 
-  // Check for pasted image
+  // Handle pasted image
   const images = contentEl.querySelectorAll('img');
   if (images.length > 0) {
-    const image = images[0]; // Take first pasted image
-    try {
-      // Convert base64 image to Blob
-      const response = await fetch(image.src);
-      const blob = await response.blob();
-      const storageRef = storage.ref(`images/${Date.now()}-${auth.currentUser.uid}`);
-      await storageRef.put(blob);
-      imageUrl = await storageRef.getDownloadURL();
-    } catch (error) {
-      console.error('Image upload error:', error);
-      showNotice('js-login-err', 'Failed to upload screenshot', false);
-      return;
-    }
+    const image = images[0];
+    const response = await fetch(image.src);
+    const blob = await response.blob();
+    data.append('image', blob, `image-${Date.now()}.png`);
   }
 
-// Save post to Firestore
   try {
-    await addDoc(collection(db, 'posts'), {
-      title: data.get('title'),
-      content: textContent,
-      image_url: imageUrl,
-      author: auth.currentUser.email,
-      visibility: data.get('visibility'),
-      created_at: serverTimestamp()
+    const response = await fetch(`${CLOUD_FUNCTIONS_URL}/createPost`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt')}` },
+      body: data
     });
-    e.target.reset();
-    contentEl.innerHTML = ''; // Clear contenteditable
-    showNotice('js-login-success', 'Post created!', true);
-    await displayPosts();
+    if (response.ok) {
+      e.target.reset();
+      contentEl.innerHTML = '';
+      showNotice('js-login-success', 'Post created!', true);
+      displayPosts();
+    } else {
+      showNotice('js-login-err', 'Failed to create post', false);
+    }
   } catch (error) {
     console.error('Post creation error:', error);
     showNotice('js-login-err', 'Failed to create post', false);
@@ -94,25 +77,24 @@ const displayPosts = async () => {
   const postsEl = getEl('js-posts');
   postsEl.innerHTML = '';
   try {
-    let q = collection(db, 'posts');
-    if (auth.currentUser) {
-      q = query(q, where('visibility', 'in', ['public', 'private']), orderBy('created_at', 'desc'));
-    } else {
-      q = query(q, where('visibility', '==', 'public'), orderBy('created_at', 'desc'));
+    const response = await fetch(`${CLOUD_FUNCTIONS_URL}/getPosts`, {
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt') || ''}` }
+    });
+    if (!response.ok) {
+      throw new Error('HTTP error');
     }
-    const querySnapshot = await getDocs(q);
-    if (querySnapshot.empty) {
+    const posts = await response.json();
+    if (posts.length === 0) {
       postsEl.innerHTML = '<div class="post">No posts available.</div>';
     } else {
-      querySnapshot.forEach(doc => {
-        const post = doc.data();
+      posts.forEach(post => {
         const postEl = document.createElement('div');
         postEl.className = 'post';
         postEl.innerHTML = `
           <div class="post-title">${post.title}</div>
           <div class="post-content">${post.content}</div>
           ${post.image_url ? `<img class="post-image" src="${post.image_url}" alt="Post image">` : ''}
-          <div class="post-author">Posted by ${post.author} on ${post.created_at?.toDate().toLocaleDateString() || 'Unknown date'}</div>
+          <div class="post-author">Posted by ${post.author} on ${new Date(post.created_at).toLocaleDateString()}</div>
         `;
         postsEl.appendChild(postEl);
       });
@@ -123,21 +105,20 @@ const displayPosts = async () => {
   }
 };
 
-const main = async () => {
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      getEl('js-login-section').classList.add('hidden');
-      getEl('js-post-form-section').classList.remove('hidden');
-      displayPosts();
-    } else {
-      getEl('js-login-section').classList.remove('hidden');
-      getEl('js-post-form-section').classList.add('hidden');
-      displayPosts();
-    }
-  });
+const main = () => {
+  // Check initial auth state (optional, for refresh handling)
+  const token = localStorage.getItem('jwt');
+  if (token) {
+    getEl('js-login-section').classList.add('hidden');
+    getEl('js-post-form-section').classList.remove('hidden');
+    displayPosts();
+  } else {
+    getEl('js-login-section').classList.remove('hidden');
+    getEl('js-post-form-section').classList.add('hidden');
+    displayPosts();
+  }
   getEl('js-login-form').addEventListener('submit', handleLogin);
   getEl('js-post-form').addEventListener('submit', handlePostSubmit);
-  // Handle paste event for screenshots
   getEl('post-content').addEventListener('paste', async e => {
     e.preventDefault();
     const items = (e.clipboardData || window.clipboardData).items;
@@ -145,7 +126,7 @@ const main = async () => {
     let image = null;
     for (const item of items) {
       if (item.type.startsWith('text')) {
-        text = item.getAsString(s => text = s);
+        item.getAsString(s => text = s);
       } else if (item.type.startsWith('image')) {
         image = item.getAsFile();
       }
@@ -154,11 +135,11 @@ const main = async () => {
     if (image) {
       const img = document.createElement('img');
       img.src = URL.createObjectURL(image);
-      contentEl.innerHTML = ''; // Clear existing content
+      contentEl.innerHTML = '';
       contentEl.appendChild(img);
     }
     if (text) {
-      contentEl.innerHTML += text.replace(/\n/g, '<br>'); // Preserve line breaks
+      contentEl.innerHTML += text.replace(/\n/g, '<br>');
     }
   });
 };

@@ -251,6 +251,10 @@
 .notice-wr {
     margin-top: 10px;
     text-align: center;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    color: #fff;
 }
 
 .notice {
