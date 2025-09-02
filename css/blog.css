@@ -216,7 +216,19 @@
     font-size: 1rem;
     color: #555;
 }
-
+.contact-form-textarea[contenteditable] {
+  width: 100%;
+  min-height: 100px;
+  border: 1px solid #ccc;
+  padding: 8px;
+  font-size: 16px;
+  resize: vertical;
+  overflow: auto;
+}
+.contact-form-textarea[contenteditable]:empty:before {
+  content: attr(placeholder);
+  color: #999;
+}
 .post-image {
     max-width: 100%;
     height: auto;
