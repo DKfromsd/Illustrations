@@ -1,158 +1,109 @@
-// js/blog.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getAuth, signInWithCustomToken, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyACJE6BZz3Cvfaahra5U1b-nPY9u-1JG-A",
-  authDomain: "pen-from-the-northwest-blog.firebaseapp.com",
-  projectId: "pen-from-the-northwest-blog",
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
 const CLOUD_FUNCTIONS_URL = 'https://nam5-pen-from-the-northwest-blog.cloudfunctions.net/api';
 
-const getEl = (id) => document.getElementById(id);
-const showNotice = (id, message, isSuccess) => {
-  const el = getEl(id);
-  el.textContent = message;
-  el.className = `notice ${isSuccess ? '' : 'notice-err'}`;
-  el.classList.remove('hidden');
-  setTimeout(() => el.classList.add('hidden'), 3000);
-};
+// Show notice (for login success/error)
+function showNotice(isSuccess, message) {
+  const successNotice = document.getElementById('js-login-success');
+  const errorNotice = document.getElementById('js-login-err');
+  if (isSuccess) {
+    successNotice.textContent = message || 'Login successful!';
+    successNotice.classList.remove('hidden');
+    errorNotice.classList.add('hidden');
+  } else {
+    errorNotice.textContent = message || 'Invalid credentials';
+    errorNotice.classList.remove('hidden');
+    successNotice.classList.add('hidden');
+  }
+}
 
-const handleLogin = async (e) => {
-  e.preventDefault();
-  const data = new FormData(e.target);
-  const username = data.get('username');
-  const password = data.get('password');
+// Handle login (backend-based)
+async function handleLogin(username, password) {
   try {
-    await signInWithEmailAndPassword(auth, username, password);
-    const response = await fetch(`${CLOUD_FUNCTIONS_URL}/login`, {
+    const response = await fetch(`${CLOUD_FUNCTIONS_URL}/api/login`, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({username}),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
     });
+    const result = await response.json();
     if (response.ok) {
-      const {token} = await response.json();
-      await signInWithCustomToken(auth, token);
-      localStorage.setItem('jwt', token);
-      getEl('js-login-section').classList.add('hidden');
-      getEl('js-post-form-section').classList.remove('hidden');
-      showNotice('js-login-success', 'Login successful!', true);
+      localStorage.setItem('jwt', result.token);
+      document.getElementById('js-login-section').classList.add('hidden');
+      document.getElementById('js-post-form-section').classList.remove('hidden');
+      showNotice(true);
       displayPosts();
     } else {
-      showNotice('js-login-err', 'Invalid credentials', false);
+      throw new Error(result.error || 'Invalid credentials');
     }
   } catch (error) {
     console.error('Login error:', error);
-    showNotice('js-login-err', error.message || 'Login failed', false);
+    showNotice(false, error.message);
   }
-};
+}
 
-const handlePostSubmit = async (e) => {
+// Handle post submission
+async function handlePostSubmit(e) {
   e.preventDefault();
-  const data = new FormData(e.target);
-  const contentEl = getEl('post-content');
-  const textContent = contentEl.textContent.trim();
-
-  const images = contentEl.querySelectorAll('img');
-  if (images.length > 0) {
-    const image = images[0];
-    const response = await fetch(image.src);
-    const blob = await response.blob();
-    data.append('image', blob, `image-${Date.now()}.png`);
-  }
+  const title = document.getElementById('post-title').value;
+  const content = document.getElementById('post-content').innerText;
+  const visibility = document.querySelector('#js-post-form select[name="visibility"]').value;
+  const jwt = localStorage.getItem('jwt');
 
   try {
-    const response = await fetch(`${CLOUD_FUNCTIONS_URL}/createPost`, {
+    const response = await fetch(`${CLOUD_FUNCTIONS_URL}/api/createPost`, {
       method: 'POST',
-      headers: {'Authorization': `Bearer ${localStorage.getItem('jwt')}`},
-      body: data,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwt}`
+      },
+      body: JSON.stringify({ title, content, visibility })
     });
+    const result = await response.json();
     if (response.ok) {
-      e.target.reset();
-      contentEl.innerHTML = '';
-      showNotice('js-login-success', 'Post created!', true);
+      alert('Post created successfully');
+      document.getElementById('post-title').value = '';
+      document.getElementById('post-content').innerText = '';
       displayPosts();
     } else {
-      showNotice('js-login-err', 'Failed to create post', false);
+      console.error('Post error:', result);
+      alert('Failed to create post: ' + result.error);
     }
   } catch (error) {
     console.error('Post creation error:', error);
-    showNotice('js-login-err', 'Failed to create post', false);
+    alert('Failed to create post: ' + error.message);
   }
-};
+}
 
-const displayPosts = async () => {
-  const postsEl = getEl('js-posts');
-  postsEl.innerHTML = '';
+// Display posts
+async function displayPosts() {
   try {
-    const response = await fetch(`${CLOUD_FUNCTIONS_URL}/getPosts`, {
-      headers: {'Authorization': `Bearer ${localStorage.getItem('jwt') || ''}`},
+    const response = await fetch(`${CLOUD_FUNCTIONS_URL}/api/getPosts`, {
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt') || ''}` }
     });
-    if (!response.ok) {
-      throw new Error('HTTP error');
-    }
     const posts = await response.json();
-    if (posts.length === 0) {
-      postsEl.innerHTML = '<div class="post">No posts available.</div>';
-    } else {
-      posts.forEach((post) => {
-        const postEl = document.createElement('div');
-        postEl.className = 'post';
-        postEl.innerHTML = `
-          <div class="post-title">${post.title}</div>
-          <div class="post-content">${post.content}</div>
-          ${post.image_url ? `<img class="post-image" src="${post.image_url}" alt="Post image">` : ''}
-          <div class="post-author">Posted by ${post.author} on ${new Date(post.created_at).toLocaleDateString()}</div>
-        `;
-        postsEl.appendChild(postEl);
-      });
-    }
+    const postsDiv = document.getElementById('js-posts');
+    postsDiv.innerHTML = posts.map(post => `
+      <div class="tile-item">
+        <h3>${post.title}</h3>
+        <p>${post.content}</p>
+        <p>Visibility: ${post.visibility}</p>
+        <p>Posted by ${post.author} on ${new Date(post.created_at).toLocaleString()}</p>
+      </div>
+    `).join('');
   } catch (error) {
-    console.error('Error fetching posts:', error);
-    showNotice('js-login-err', 'Failed to load posts', false);
+    console.error('Load posts error:', error);
   }
-};
+}
 
-const main = () => {
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      getEl('js-login-section').classList.add('hidden');
-      getEl('js-post-form-section').classList.remove('hidden');
-      displayPosts();
-    } else {
-      getEl('js-login-section').classList.remove('hidden');
-      getEl('js-post-form-section').classList.add('hidden');
-      displayPosts();
-    }
-  });
-  getEl('js-login-form').addEventListener('submit', handleLogin);
-  getEl('js-post-form').addEventListener('submit', handlePostSubmit);
-  getEl('post-content').addEventListener('paste', async (e) => {
+// Main initialization
+function main() {
+  document.getElementById('js-login-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const items = (e.clipboardData || window.clipboardData).items;
-    let text = '';
-    let image = null;
-    for (const item of items) {
-      if (item.type.startsWith('text')) {
-        item.getAsString((s) => text = s);
-      } else if (item.type.startsWith('image')) {
-        image = item.getAsFile();
-      }
-    }
-    const contentEl = getEl('post-content');
-    if (image) {
-      const img = document.createElement('img');
-      img.src = URL.createObjectURL(image);
-      contentEl.innerHTML = '';
-      contentEl.appendChild(img);
-    }
-    if (text) {
-      contentEl.innerHTML += text.replace(/\n/g, '<br>');
-    }
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    await handleLogin(username, password);
   });
-};
 
+  document.getElementById('js-post-form').addEventListener('submit', handlePostSubmit);
+}
+
+// Run main
 main();
