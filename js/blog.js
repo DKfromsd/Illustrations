@@ -1,21 +1,18 @@
 // js/blog.js
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 import { getAuth, signInWithCustomToken, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyACJE6BZz3Cvfaahra5U1b-nPY9u-1JG-A",
   authDomain: "pen-from-the-northwest-blog.firebaseapp.com",
-  projectId: "pen-from-the-northwest-blog"
+  projectId: "pen-from-the-northwest-blog",
 };
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 const CLOUD_FUNCTIONS_URL = 'https://nam5-pen-from-the-northwest-blog.cloudfunctions.net/api';
 
-
-const getEl = id => document.getElementById(id);
+const getEl = (id) => document.getElementById(id);
 const showNotice = (id, message, isSuccess) => {
   const el = getEl(id);
   el.textContent = message;
@@ -24,20 +21,21 @@ const showNotice = (id, message, isSuccess) => {
   setTimeout(() => el.classList.add('hidden'), 3000);
 };
 
-const handleLogin = async e => {
+const handleLogin = async (e) => {
   e.preventDefault();
   const data = new FormData(e.target);
+  const username = data.get('username');
+  const password = data.get('password');
   try {
+    await signInWithEmailAndPassword(auth, username, password);
     const response = await fetch(`${CLOUD_FUNCTIONS_URL}/login`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        username: data.get('username'),
-        password: data.get('password')
-      })
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({username}),
     });
     if (response.ok) {
-      const { token } = await response.json();
+      const {token} = await response.json();
+      await signInWithCustomToken(auth, token);
       localStorage.setItem('jwt', token);
       getEl('js-login-section').classList.add('hidden');
       getEl('js-post-form-section').classList.remove('hidden');
@@ -48,17 +46,16 @@ const handleLogin = async e => {
     }
   } catch (error) {
     console.error('Login error:', error);
-    showNotice('js-login-err', 'Login failed', false);
+    showNotice('js-login-err', error.message || 'Login failed', false);
   }
 };
 
-const handlePostSubmit = async e => {
+const handlePostSubmit = async (e) => {
   e.preventDefault();
   const data = new FormData(e.target);
   const contentEl = getEl('post-content');
   const textContent = contentEl.textContent.trim();
 
-  // Handle pasted image
   const images = contentEl.querySelectorAll('img');
   if (images.length > 0) {
     const image = images[0];
@@ -70,8 +67,8 @@ const handlePostSubmit = async e => {
   try {
     const response = await fetch(`${CLOUD_FUNCTIONS_URL}/createPost`, {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt')}` },
-      body: data
+      headers: {'Authorization': `Bearer ${localStorage.getItem('jwt')}`},
+      body: data,
     });
     if (response.ok) {
       e.target.reset();
@@ -92,7 +89,7 @@ const displayPosts = async () => {
   postsEl.innerHTML = '';
   try {
     const response = await fetch(`${CLOUD_FUNCTIONS_URL}/getPosts`, {
-      headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt') || ''}` }
+      headers: {'Authorization': `Bearer ${localStorage.getItem('jwt') || ''}`},
     });
     if (!response.ok) {
       throw new Error('HTTP error');
@@ -101,7 +98,7 @@ const displayPosts = async () => {
     if (posts.length === 0) {
       postsEl.innerHTML = '<div class="post">No posts available.</div>';
     } else {
-      posts.forEach(post => {
+      posts.forEach((post) => {
         const postEl = document.createElement('div');
         postEl.className = 'post';
         postEl.innerHTML = `
@@ -120,27 +117,27 @@ const displayPosts = async () => {
 };
 
 const main = () => {
-  // Check initial auth state (optional, for refresh handling)
-  const token = localStorage.getItem('jwt');
-  if (token) {
-    getEl('js-login-section').classList.add('hidden');
-    getEl('js-post-form-section').classList.remove('hidden');
-    displayPosts();
-  } else {
-    getEl('js-login-section').classList.remove('hidden');
-    getEl('js-post-form-section').classList.add('hidden');
-    displayPosts();
-  }
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      getEl('js-login-section').classList.add('hidden');
+      getEl('js-post-form-section').classList.remove('hidden');
+      displayPosts();
+    } else {
+      getEl('js-login-section').classList.remove('hidden');
+      getEl('js-post-form-section').classList.add('hidden');
+      displayPosts();
+    }
+  });
   getEl('js-login-form').addEventListener('submit', handleLogin);
   getEl('js-post-form').addEventListener('submit', handlePostSubmit);
-  getEl('post-content').addEventListener('paste', async e => {
+  getEl('post-content').addEventListener('paste', async (e) => {
     e.preventDefault();
     const items = (e.clipboardData || window.clipboardData).items;
     let text = '';
     let image = null;
     for (const item of items) {
       if (item.type.startsWith('text')) {
-        item.getAsString(s => text = s);
+        item.getAsString((s) => text = s);
       } else if (item.type.startsWith('image')) {
         image = item.getAsFile();
       }
