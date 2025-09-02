@@ -1,5 +1,19 @@
-// blog.js
-const CLOUD_FUNCTIONS_URL = 'https://us-central1-pen-from-the-northwest-blog.cloudfunctions.net'; // Update with your region/project
+// js/blog.js
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getAuth, signInWithCustomToken, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyACJE6BZz3Cvfaahra5U1b-nPY9u-1JG-A",
+  authDomain: "pen-from-the-northwest-blog.firebaseapp.com",
+  projectId: "pen-from-the-northwest-blog"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const CLOUD_FUNCTIONS_URL = 'https://nam5-pen-from-the-northwest-blog.cloudfunctions.net/api';
+
 
 const getEl = id => document.getElementById(id);
 const showNotice = (id, message, isSuccess) => {
