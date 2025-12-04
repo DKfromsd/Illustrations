@@ -57,6 +57,9 @@ onAuthStateChanged(auth, async user => {
     $('js-login-section').classList.remove('hidden');
     $('js-post-form-section').classList.add('hidden');
   }
+
+  $('js-posts-section').classList.remove('hidden');
+  
   displayPosts(); // refresh posts list
 });
 
@@ -100,26 +103,68 @@ $('js-post-form').addEventListener('submit', async e => {
 // Display posts
 async function displayPosts() {
   const token = await getToken();
-  const res = await fetch(`${CLOUD_FUNCTIONS_URL}/getPosts`, {
-    headers: token ? { Authorization: `Bearer ${token}` } : {}
-  });
-  const posts = await res.json();
+  
+  try {
+    const res = await fetch(`${CLOUD_FUNCTIONS_URL}/getPosts`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {}
+    });
 
-  const container = $('js-posts');
-  if (!posts || posts.length === 0) {
-    container.innerHTML = '<div class="tile-item">No posts yet.</div>';
-    return;
+    // 네트워크 오류나 500 등일 때도 여기서 잡아줌
+    if (!res.ok) {
+      console.error('getPosts 응답 오류:', res.status);
+      $('js-posts').innerHTML = '<div class="tile-item" style="color:#c33;">포스트를 불러오지 못했습니다. 새로고침 해보세요.</div>';
+      return;
+    }
+
+    const posts = await res.json();
+
+    const container = $('js-posts');
+
+    // posts가 없거나 배열이 아닐 때
+    if (!Array.isArray(posts) || posts.length === 0) {
+      container.innerHTML = '<div class="tile-item">No posts yet.</div>';
+      return;
+    }
+
+    container.innerHTML = posts.map(p => {
+      // 날짜 안전하게 처리
+      let dateStr = 'Just now';
+      if (p.created_at) {
+        const d = new Date(p.created_at);
+        if (!isNaN(d.getTime())) {
+          dateStr = d.toLocaleString();
+        }
+      }
+
+      // 제목/내용/작성자 없을 때도 깨지지 않게
+      const title = p.title ? (p.title || 'Untitled') : 'Untitled';
+      const content = p.content ? p.content.replace(/\n/g, '<br>') : '';
+      const author = p.author || 'Unknown';
+      const visibility = (p.visibility || 'private').toUpperCase();
+
+      return `
+        <div class="tile-item">
+          <h3>${title}</h3>
+          <div class="post-content-preview">${content}</div>
+          ${p.imageUrl ? `<img src="${p.imageUrl}" style="max-width:100%; margin:10px 0; border-radius:8px;" loading="lazy>` : ''}
+          <p><small>By ${author} • ${dateStr} • ${visibility}</small></p>
+        </div>
+      `;
+    }).join('');
+
+  } catch (err) {
+    console.error('displayPosts 전체 오류:', err);
+    $('js-posts').innerHTML = '<div class="tile-item" style="color:red;">오류가 발생했습니다. 새로고침해주세요.</div>';
   }
-
-  container.innerHTML = posts.map(p => `
-    <div class="tile-item">
-      <h3>${p.title}</h3>
-      <div>${p.content.replace(/\n/g, '<br>')}</div>
-      ${p.imageUrl ? `<img src="${p.imageUrl}" style="max-width:100%;margin:10px 0;">` : ''}
-      <p><small>By ${p.author} • ${new Date(p.created_at).toLocaleString()} • ${p.visibility}</small></p>
-    </div>
-  `).join('');
 }
+
 
 // Initial load
 displayPosts();
+
+// HTML escape (보안 + 깨짐 방지) – 필요하면 사용)
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
