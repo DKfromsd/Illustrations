@@ -59,7 +59,7 @@ onAuthStateChanged(auth, async user => {
   }
 
   $('js-posts-section').classList.remove('hidden');
-  
+
   displayPosts(); // refresh posts list
 });
 
@@ -106,7 +106,15 @@ async function displayPosts() {
   
   try {
     const res = await fetch(`${CLOUD_FUNCTIONS_URL}/getPosts`, {
-      headers: token ? { Authorization: `Bearer ${token}` } : {}
+      method: 'GET',
+      headers: token ? { 
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      } : {
+        'Content-Type': 'application/json'
+      },
+      // 이게 핵심! preflight 요청도 허용
+      credentials: 'omit'
     });
 
     // 네트워크 오류나 500 등일 때도 여기서 잡아줌
@@ -154,7 +162,11 @@ async function displayPosts() {
 
   } catch (err) {
     console.error('displayPosts 전체 오류:', err);
-    $('js-posts').innerHTML = '<div class="tile-item" style="color:red;">오류가 발생했습니다. 새로고침해주세요.</div>';
+    $('js-posts').innerHTML = `
+      <div class="tile-item" style="color:#c33; text-align:center; padding:20px;">
+        포스트을 불러오지 못했습니다.<br>
+        <small>새로고침하거나 나중에 다시 시도해주세요.</small>
+      </div>`;
   }
 }
 
