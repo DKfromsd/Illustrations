@@ -277,3 +277,6 @@ const main = async () => {
 }
 
 main();
+window.gotoHome = gotoHome;
+window.gotoBlog = gotoBlog;
+window.openGemini = openGemini;
