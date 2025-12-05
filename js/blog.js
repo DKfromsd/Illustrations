@@ -6,7 +6,7 @@ import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https:/
 
 // THIS IS SAFE TO BE PUBLIC — Google designed it this way
 const firebaseConfig = {
-  apiKey: "AIzaSyACJE6BZz3Cvfaahra5U1b-nPY9u-1JG-A",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY, 
   authDomain: "pen-from-the-northwest-blog.firebaseapp.com",
   projectId: "pen-from-the-northwest-blog",
   storageBucket: "pen-from-the-northwest-blog.appspot.com",
@@ -180,3 +180,28 @@ function escapeHtml(text) {
   div.textContent = text;
   return div.innerHTML;
 }
+
+const goto_Home = () => {
+  window.location.href = './index.html';
+}
+
+const goto_Blog = () => {
+  window.location.href = './blog.html';
+}
+
+const open_Gemini = () => {
+  const jwt = localStorage.getItem('jwt');
+  if (!jwt) {
+    alert('로그인 후에 이용할 수 있습니다.');
+    return;
+  }
+  window.open(
+    'https://gemini-animator2.mickeyfromsd.workers.dev/'
+    ,'_blank'
+    ,'width=1200,height=800,scrollbars=yes,resizable=yes'
+  );
+};
+
+window.goto_Home = goto_Home;
+window.goto_Blog = goto_Blog;
+window.open_Gemini = open_Gemini;
