@@ -1,3 +1,3 @@
 # Illustrations
-This is for test project of childrens' illustrator community
+This is a custom project of childrens' illustrator community
 

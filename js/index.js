@@ -240,6 +240,20 @@ const gotoBlog = () => {
   window.location.href = './blog.html';
 }
 
+const openGemini = () => {
+  const jwt = localStorage.getItem('jwt');
+  if (!jwt) {
+    alert('로그인 후에 이용할 수 있습니다.');
+    return;
+  }
+  window.open(
+    //'https://backend-firebase2의-배포-URL',  // 여기 채우기
+    //'https://penfromthenorthwest.com/animator',  // 배포 후 실제 URL
+    'https://gemini-animator2.mickeyfromsd.workers.dev/'
+    ,'_blank'
+    ,'width=1200,height=800,scrollbars=yes,resizable=yes'
+  );
+};
 
 const startEventListener = () => {
   startContactListener(); // start listener
