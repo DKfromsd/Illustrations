@@ -1,6 +1,7 @@
 // js/blog.js — FINAL WORKING VERSION (Dec 2025)
 const CLOUD_FUNCTIONS_URL = 'https://us-central1-pen-from-the-northwest-blog.cloudfunctions.net/api';
 
+//import { DataConnectOperationError } from "firebase/data-connect";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
@@ -170,7 +171,6 @@ async function displayPosts() {
   }
 }
 
-
 // Initial load
 displayPosts();
 
@@ -199,6 +199,35 @@ document.addEventListener('DOMContentLoaded', () => {
   const geminiBtn = document.getElementById('gemini-menu');
   if (geminiBtn) {
     geminiBtn.addEventListener('click', open_Gemini);
+  }
+
+  //log out 
+  const logoutBtn = document.getElementById('logout-menu');
+  if(logoutBtn){
+    logoutBtn.addEventListener('click', async()=>{
+      try{
+        await auth.signOut();
+        localStorage.clear();//removeItem('jwt');
+        sessionStorage.clear();
+        document.cookie.split(";").forEach(c =>{
+          document.cookie= c
+          .replace(/^ +/, "")
+          .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+        });
+
+      //location.reload(); 
+      // 문제는 Firebase Auth의 자동 로그인 기능 .
+      // onAuthStateChanged 리스너가 Firebase가 저장한 세션(쿠키)을 보고 자동으로 로그인 상태 복구하기 때문에,
+      // signOut()을 해도 바로 다시 로그인돼서 blog.html이 유지.
+    
+        alert('Log-out-success');
+        window.location.href = './blog.html';  // 무조건 blog.html로 강제 이동
+      }
+      catch(err){
+        console.error('Logout error:', err);
+      alert('Logout -failed, refresh and retry');
+      }
+    })
   }
 });
 
