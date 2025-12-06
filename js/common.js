@@ -3,7 +3,7 @@ let cn = 'tsohlacol';
 // console.log("cn: ", conv('')); // test cn
 
 const loadEnv = async () => {
-  //const res = await fetch('/env');
+  const res = await fetch('/env');
   if (!res.ok) {
     return;
   }
