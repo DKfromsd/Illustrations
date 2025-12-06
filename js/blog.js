@@ -6,7 +6,7 @@ import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https:/
 
 // THIS IS SAFE TO BE PUBLIC — Google designed it this way
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY, 
+  apiKey: "AIzaSyACJE6BZz3Cvfaahra5U1b-nPY9u-1JG-A",
   authDomain: "pen-from-the-northwest-blog.firebaseapp.com",
   projectId: "pen-from-the-northwest-blog",
   storageBucket: "pen-from-the-northwest-blog.appspot.com",
