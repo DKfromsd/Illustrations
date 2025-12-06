@@ -17,9 +17,9 @@
   </head>
   <body id="js-body" class="body blog-bg">
     <nav class="menu-wr">
-      <div onclick="goto_Home()" class="menu">Home</div>
-      <div onclick="goto_Blog()" class="menu active">Blog</div>
-      <div onclick="open_Gemini()" class="menu">Gemini</div>  <!-- 이 줄 추가 -->
+      <div id="home-menu" class="menu">Home</div>
+      <div id="blog-menu" class="menu active">Blog</div>
+      <div id="gemini-menu" class="menu">Gemini</div>
     </nav>
     <header id="js-header" class="header">
       <div class="text-head-wr">
@@ -28,7 +28,7 @@
     </header>
     <main id="js-content" role="content" class="layout-wr">
       <div class="sec-wr">
-        <div class="sec-title mb-16px">Family Blog</div>
+        <div class="sec-title mb-16px">Member Blog</div>
         <div id="js-contact" class="contact-wr">
           <div id="js-login-notice" class="notice-wr hidden">
             <div id="js-login-success" class="notice hidden">Login successful!</div>
@@ -78,7 +78,6 @@
     <footer id="js-footer" class="footer">© 2025 Children's Books Illustration</footer>
     <script type="text/javascript" src="./js/common.js"></script>
     <script type="text/javascript" src="./js/scroll.js"></script>
-    <script type="module" src="./js/blog.js?v=20251203"></script>
-    <script type="text/javascript" src="./js/index.js"></script>  <!-- 이 줄 추가 -->
+    <script type="module" src="./js/blog.js"></script>
   </body>
 </html>

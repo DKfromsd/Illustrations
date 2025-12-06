@@ -181,6 +181,27 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
+// DOM 로드 후 이벤트 바인딩 (이게 핵심! module에서도 완벽 동작)
+document.addEventListener('DOMContentLoaded', () => {
+  // Home 버튼 이벤트
+  const homeBtn = document.getElementById('home-menu');
+  if (homeBtn) {
+    homeBtn.addEventListener('click', goto_Home);
+  }
+
+  // Blog 버튼 이벤트
+  const blogBtn = document.getElementById('blog-menu');
+  if (blogBtn) {
+    blogBtn.addEventListener('click', goto_Blog);
+  }
+
+  // Gemini 버튼 이벤트
+  const geminiBtn = document.getElementById('gemini-menu');
+  if (geminiBtn) {
+    geminiBtn.addEventListener('click', open_Gemini);
+  }
+});
+
 const goto_Home = () => {
   window.location.href = './index.html';
 }
@@ -202,6 +223,3 @@ const open_Gemini = () => {
   );
 };
 
-window.goto_Home = goto_Home;
-window.goto_Blog = goto_Blog;
-window.open_Gemini = open_Gemini;
