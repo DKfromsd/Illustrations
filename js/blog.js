@@ -240,9 +240,11 @@ const goto_Blog = () => {
 }
 
 const open_Gemini = () => {
-  const jwt = localStorage.getItem('jwt');
-  if (!jwt) {
-    alert('로그인 후에 이용할 수 있습니다.');
+  // const jwt = localStorage.getItem('jwt');
+  // if (!jwt) {
+  // localStorage에 jwt 저장안함. Firebase - onAuthStateChanged로 로그인 상태 유지.
+  if (!auth.currentUser){
+     alert('로그인 후에 이용할 수 있습니다.');
     return;
   }
   window.open(
