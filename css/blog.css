@@ -284,7 +284,20 @@
     box-shadow: 0 6px 20px rgba(0,0,0,0.08);
     border: 1px solid #e8e8e8;
     transition: transform 0.2s, box-shadow 0.2s;
+    margin: 16px 0;
+    line-height: 1.7;
+    color: #444;
+    font-size: 1.05rem;
+    white-space: pre-wrap;
 }
+/* .tile-item  {
+    text-align: left;
+    margin: 16px 0;
+    line-height: 1.7;
+    color: #444;
+    font-size: 1.05rem;
+    white-space: pre-wrap;
+} */
 
 .tile-item:hover {
     background: white;
@@ -300,23 +313,21 @@
     transform: translateY(-4px);
     box-shadow: 0 12px 30px rgba(0,0,0,0.12);
 }
+.post-content-preview {
+    text-align: left !important;
+    line-height: 1.8;
+    font-size: 1.1rem;
+    color: #333;
+    white-space: pre-wrap;
+}
 
 .tile-item h3 {
     text-align: center !important;     /* 제목 가운데 */
     font-size: 1.7rem;
     margin: 0 0 14px 0;
-    font-size: 1.5rem;
     color: #222;
     font-family: 'SF_Pro_Display_Semibold', sans-serif;
-}
-
-.tile-item .post-content-preview {
-    text-align: left;
-    margin: 16px 0;
-    line-height: 1.7;
-    color: #444;
-    font-size: 1.05rem;
-    white-space: pre-wrap;
+    margin-top: 20px;
 }
 
 .tile-item img {
