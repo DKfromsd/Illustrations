@@ -147,7 +147,16 @@ async function displayPosts() {
 
       // 제목/내용/작성자 없을 때도 깨지지 않게
       const title = p.title ? (p.title || 'Untitled') : 'Untitled';
-      const content = p.content ? p.content.replace(/\n/g, '<br>') : '';
+      // const content = p.content ? p.content.replace(/\n/g, '<br>') : '';
+      const rawContent = p.content || '';
+
+      let content = rawContent;
+      if (rawContent.includes('data:image/') || rawContent.includes('<img')) {
+        content = rawContent;
+      } else {
+        content = rawContent.replace(/\n/g, '<br>');
+      }
+
       const author = p.author || 'Unknown';
       const visibility = (p.visibility || 'private').toUpperCase();
 
