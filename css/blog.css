@@ -40,7 +40,7 @@
 .text-head {
     font-family: 'SF_Pro_Display_Bold', sans-serif;
     font-size: 3.75rem; /* ~60px */
-    color: #53c924 !important; /* Ensure green color */
+    color: #BBAA95 !important; /* Ensure Khaki color */
     font-weight: bold;
     margin: 0;
     transition: opacity 0.5s ease;
@@ -69,18 +69,18 @@
 .menu {
     font-family: 'SF_Pro_Display_Semibold', sans-serif;
     font-size: 21px;
-    color: #53c924 !important; /* Ensure green color */
+    color: #9B8770 !important; /* Ensure khaki */
     margin-left: 40px;
     cursor: pointer;
     transition: color 0.3s ease;
 }
 
 .menu:hover {
-    color: #2fe047 !important; /* Ensure hover green */
+    color: #B7A588 !important; /* Ensure khaki */
 }
 
 .menu.active {
-    color: #1fdb4e !important; /* Ensure active green */
+    color: #7D6B57 !important; /* Ensure active khaki  */
 }
 
 @media (max-width: 540px) {
@@ -174,7 +174,7 @@
     padding: 8px;
     box-sizing: border-box;
     background-color: #FFF;
-    color: #13c413 !important; /* Ensure green button text */
+    color: #576B3C !important; /* Ensure khaki button text */
     border: none;
     cursor: pointer;
     font-size: 16px;
