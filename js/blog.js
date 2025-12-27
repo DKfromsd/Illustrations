@@ -179,7 +179,22 @@ async function displayPosts() {
     
 
       container.innerHTML = posts.map(p => {
-      const date = p.created_at ? new Date(p.created_at).toLocaleString() : 'Just now';
+      //const date = p.created_at ? new Date(p.created_at).toLocaleString() : 'Just now';
+      let dateStr = 'Just now';
+      if (p.created_at) {
+        const date = new Date(p.created_at);
+        // 유효한 날짜인지 확인 (Invalid Date 방지)
+        if (!isNaN(date.getTime())) {
+          dateStr = date.toLocaleString(undefined, {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true  // 오전/오후 표시 (예: 3:45 PM)
+          });
+        }
+      }
 
       const author = p.author || 'Unknown';
       const visibility = (p.visibility || 'private').toUpperCase();
