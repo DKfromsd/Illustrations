@@ -182,17 +182,32 @@ async function displayPosts() {
       //const date = p.created_at ? new Date(p.created_at).toLocaleString() : 'Just now';
       let dateStr = 'Just now';
       if (p.created_at) {
-        const date = new Date(p.created_at);
-        // 유효한 날짜인지 확인 (Invalid Date 방지)
-        if (!isNaN(date.getTime())) {
-          dateStr = date.toLocaleString(undefined, {
+        // ISO 문자열에서 Z나 밀리초가 있어도 안전하게 파싱
+        const timestamp = p.created_at;
+
+        // Firestore Timestamp 객체 형태인지 확인 (옛날 코드에서 올 수 있음)
+        if (timestamp && timestamp.toDate) {
+          dateStr = timestamp.toDate().toLocaleString(undefined, {
             year: 'numeric',
             month: 'long',
             day: 'numeric',
             hour: 'numeric',
             minute: '2-digit',
-            hour12: true  // 오전/오후 표시 (예: 3:45 PM)
+            hour12: true
           });
+        } else {
+          // 문자열인 경우 안전하게 파싱
+          const date = new Date(timestamp.replace('Z', ''));  // Z 제거 후 파싱 (안전)
+          if (!isNaN(date.getTime())) {
+            dateStr = date.toLocaleString(undefined, {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              hour: 'numeric',
+              minute: '2-digit',
+              hour12: true
+            });
+          }
         }
       }
 
