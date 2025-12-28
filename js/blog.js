@@ -175,40 +175,56 @@ async function displayPosts() {
       container.innerHTML = '<div class="tile-item">No posts yet.</div>';
       return;
     }
+    container.innerHTML = posts.map(p => {
+    //const date = p.created_at ? new Date(p.created_at).toLocaleString() : 'Just now';
+      // let dateStr = 'Just now';
+      // if (p.created_at) {
+      //   // ISO 문자열에서 Z나 밀리초가 있어도 안전하게 파싱
+      //   const timestamp = p.created_at;
 
-    
-
-      container.innerHTML = posts.map(p => {
-      //const date = p.created_at ? new Date(p.created_at).toLocaleString() : 'Just now';
+      //   // Firestore Timestamp 객체 형태인지 확인 (옛날 코드에서 올 수 있음)
+      //   if (timestamp && timestamp.toDate) {
+      //     dateStr = timestamp.toDate().toLocaleString(undefined, {
+      //       year: 'numeric',
+      //       month: 'long',
+      //       day: 'numeric',
+      //       hour: 'numeric',
+      //       minute: '2-digit',
+      //       hour12: true
+      //     });
+      //   } else {
+      //     // 문자열인 경우 안전하게 파싱
+      //     const date = new Date(timestamp.replace('Z', ''));  // Z 제거 후 파싱 (안전)
+      //     if (!isNaN(date.getTime())) {
+      //       dateStr = date.toLocaleString(undefined, {
+      //         year: 'numeric',
+      //         month: 'long',
+      //         day: 'numeric',
+      //         hour: 'numeric',
+      //         minute: '2-digit',
+      //         hour12: true
+      //       });
+      //    }
+      //   }
+      // }
       let dateStr = 'Just now';
       if (p.created_at) {
-        // ISO 문자열에서 Z나 밀리초가 있어도 안전하게 파싱
-        const timestamp = p.created_at;
-
-        // Firestore Timestamp 객체 형태인지 확인 (옛날 코드에서 올 수 있음)
-        if (timestamp && timestamp.toDate) {
-          dateStr = timestamp.toDate().toLocaleString(undefined, {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true
-          });
-        } else {
-          // 문자열인 경우 안전하게 파싱
-          const date = new Date(timestamp.replace('Z', ''));  // Z 제거 후 파싱 (안전)
-          if (!isNaN(date.getTime())) {
-            dateStr = date.toLocaleString(undefined, {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-              hour: 'numeric',
-              minute: '2-digit',
-              hour12: true
-            });
-          }
+        const d = new Date(p.created_at);
+        if (!isNaN(d.getTime())) {
+          dateStr = d.toLocaleString();
         }
+      }
+
+      // 제목/내용/작성자 없을 때도 깨지지 않게
+      const title = p.title ? (p.title || 'Untitled') : 'Untitled';
+      // const content = p.content ? p.content.replace(/\n/g, '<br>') : '';
+      const rawContent = p.content || '';
+
+      let content = rawContent;
+      if (rawContent.includes('data:image/') || rawContent.includes('<img')) {
+        content = rawContent;
+      } else {
+        content = rawContent.replace(/\n/g, '<br>');
       }
 
       const author = p.author || 'Unknown';
