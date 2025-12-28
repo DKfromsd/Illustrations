@@ -207,7 +207,7 @@ async function displayPosts() {
             ${p.content} <!-- This now contains real <a>, <b>, <img> etc. -->
           </div>
           ${p.imageUrl ? `<img src="${p.imageUrl}" style="max-width:100%; margin:10px 0; border-radius:8px;" loading="lazy">` : ''}
-          <p><small>By ${author} • ${date} • ${visibility}</small></p>
+          <p><small>By ${author} • ${dateStr} • ${visibility}</small></p>
         </div>
       `;
     }).join('');
