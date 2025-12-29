@@ -179,19 +179,28 @@ async function displayPosts() {
         // const cleanTimestamp = p.created_at.replace(/\.\d{3}Z$/, 'Z');
         // const postDate = new Date(cleanTimestamp);
         let postDate;
-
-        // Firestore Timestamp 객체인지 확인 (새 포스트)
-        if (p.created_at && typeof p.created_at.toDate === 'function') {
-          postDate = p.created_at.toDate();
-        } else if (typeof p.created_at === 'string') {
-          // 문자열인 경우 (옛날 포스트)
-          // 밀리초 제거해서 안전하게 파싱
-          const cleanStr = p.created_at.replace(/\.\d{3}Z$/, 'Z');
-          postDate = new Date(cleanStr);
-        } else {
+        // 1. Timestamp 객체 형태 (가장 흔함)
+        if (p.created_at.seconds != null) {
+          postDate = new Date(p.created_at.seconds * 1000 + Math.round(p.created_at.nanoseconds / 1000000));
+        }
+        // 2. 문자열 형태
+        else if (typeof p.created_at === 'string') {
           postDate = new Date(p.created_at);
         }
-        
+
+        // Firestore Timestamp 객체인지 확인 (새 포스트)
+        // if (p.created_at && typeof p.created_at.toDate === 'function') {
+        //   postDate = p.created_at.toDate();
+        // } else if (typeof p.created_at === 'string') {
+        //   // 문자열인 경우 (옛날 포스트)
+        //   // 밀리초 제거해서 안전하게 파싱
+        //   const cleanStr = p.created_at.replace(/\.\d{3}Z$/, 'Z');
+        //   postDate = new Date(cleanStr);
+        // } 
+        else {
+          postDate = new Date(p.created_at);
+        }
+
         // 유효한 날짜인지 확인
         if (!isNaN(postDate.getTime())) {
           dateStr = postDate.toLocaleString(undefined, {
