@@ -148,7 +148,7 @@ $('js-post-form').addEventListener('submit', async e => {
 
   const formData = new FormData();
   formData.append('title', title);
-  formData.append('content', contentEl.innerHTML); // ← This keeps <a href=""> links!
+  formData.append('content',finalHTML); // contentEl.innerHTML); // ← This keeps <a href=""> links!
   formData.append('visibility', visibility);
 
   // Find temp images and add to form
@@ -158,22 +158,14 @@ $('js-post-form').addEventListener('submit', async e => {
   //   const response = await fetch(img.src);
   //   const blob = await response.blob();
   //   formData.append('images', blob, `pasted-image-${i + 1}.png`);
-  // }
-
-  const body = {
-  title,
-  content: finalHTML,
-  visibility
-  };
+  // 
 
   try {
     const res = await fetch(`${CLOUD_FUNCTIONS_URL}/createPost`, {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${token}` 
-      ,'Content-Type': 'application/json'
       },
-      //body: formData
-      body: JSON.stringify(body)
+      body: formData
 
     });
 
