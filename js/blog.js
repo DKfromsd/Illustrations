@@ -14,7 +14,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyACJE6BZz3Cvfaahra5U1b-nPY9u-1JG-A",
   authDomain: "pen-from-the-northwest-blog.firebaseapp.com",
   projectId: "pen-from-the-northwest-blog",
-  storageBucket: "pen-from-the-northwest-blog.appspot.com",
+  storageBucket: "pen-from-the-northwest-blog.firebasestorage.app",
   messagingSenderId: "1035792858321",
   appId: "1:1035792858321:web:8c8f65c8e8e8e8e8e8e8e8"
 };
