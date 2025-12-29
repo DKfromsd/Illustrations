@@ -72,7 +72,6 @@ const getToken = async () => auth.currentUser ? await auth.currentUser.getIdToke
 // PASTE HANDLER: Supports rich text (links) + images
 $('post-content').addEventListener('paste', async (e) => {
   e.preventDefault();
-
   const items = e.clipboardData.items;
   let hasImage = false;
 
@@ -81,20 +80,17 @@ $('post-content').addEventListener('paste', async (e) => {
       hasImage = true;
       const blob = item.getAsFile();
       const url = URL.createObjectURL(blob);
-
       const img = document.createElement('img');
       img.src = url;
       img.style.maxWidth = '100%';
       img.style.borderRadius = '8px';
       img.style.margin = '10px 0';
       img.dataset.tempUrl = url; // mark as temp for upload later
-      img.dataset.blob = true;
-
+      //img.dataset.blob = true;
       $('post-content').appendChild(img);
       $('post-content').appendChild(document.createElement('br'));
     }
   }
-
   // If no image, insert rich text (preserves <a>, <b>, etc.)
   if (!hasImage) {
     const html = e.clipboardData.getData('text/html');
@@ -110,12 +106,10 @@ $('post-content').addEventListener('paste', async (e) => {
 // Submit post with images
 $('js-post-form').addEventListener('submit', async e => {
   e.preventDefault();
-
   const title = $('post-title').value.trim();
   const visibility = $('js-post-form').querySelector('[name="visibility"]').value;
   const contentEl = $('post-content');
   const token = await getToken();
-
   if (!token) return alert('Please log in');
 
   const formData = new FormData();
@@ -154,17 +148,20 @@ $('js-post-form').addEventListener('submit', async e => {
   }
 });
 
+// URL auto clickable 
+function linkify(text) {
+  const urlRegex = /(https?:\/\/[^\s<]+[^\s<.,;:!?])/g;
+  return text.replace(urlRegex, url => `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #53c924; text-decoration: underline;">${url}</a>`);
+}
 
 // Display posts
 async function displayPosts() {
   const token = await getToken();
   
   try {
-     
     const res = await fetch(`${CLOUD_FUNCTIONS_URL}/getPosts`, {
       headers: token ? { Authorization: `Bearer ${token}` } : {}
     });
-
     if (!res.ok) throw new Error('Failed to fetch');
 
     const posts = await res.json();
@@ -176,66 +173,44 @@ async function displayPosts() {
       return;
     }
     container.innerHTML = posts.map(p => {
-    //const date = p.created_at ? new Date(p.created_at).toLocaleString() : 'Just now';
-      // let dateStr = 'Just now';
-      // if (p.created_at) {
-      //   // ISO 문자열에서 Z나 밀리초가 있어도 안전하게 파싱
-      //   const timestamp = p.created_at;
-
-      //   // Firestore Timestamp 객체 형태인지 확인 (옛날 코드에서 올 수 있음)
-      //   if (timestamp && timestamp.toDate) {
-      //     dateStr = timestamp.toDate().toLocaleString(undefined, {
-      //       year: 'numeric',
-      //       month: 'long',
-      //       day: 'numeric',
-      //       hour: 'numeric',
-      //       minute: '2-digit',
-      //       hour12: true
-      //     });
-      //   } else {
-      //     // 문자열인 경우 안전하게 파싱
-      //     const date = new Date(timestamp.replace('Z', ''));  // Z 제거 후 파싱 (안전)
-      //     if (!isNaN(date.getTime())) {
-      //       dateStr = date.toLocaleString(undefined, {
-      //         year: 'numeric',
-      //         month: 'long',
-      //         day: 'numeric',
-      //         hour: 'numeric',
-      //         minute: '2-digit',
-      //         hour12: true
-      //       });
-      //    }
-      //   }
-      // }
       let dateStr = 'Just now';
       if (p.created_at) {
-        const d = new Date(p.created_at);
-        if (!isNaN(d.getTime())) {
-          dateStr = d.toLocaleString();
+        const postDate = new Date(p.created_at);//const d = new Date(p.created_at);
+        if (!isNaN(postDate.getTime())) {
+          dateStr = postDate.toLocaleString(undefined, {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+          }
+          );
         }
       }
-
-      // 제목/내용/작성자 없을 때도 깨지지 않게
-      const title = p.title ? (p.title || 'Untitled') : 'Untitled';
-      // const content = p.content ? p.content.replace(/\n/g, '<br>') : '';
-      const rawContent = p.content || '';
-
-      let content = rawContent;
-      if (rawContent.includes('data:image/') || rawContent.includes('<img')) {
-        content = rawContent;
-      } else {
-        content = rawContent.replace(/\n/g, '<br>');
-      }
+      // 제목/내용/작성자 없을 때도 깨지지 않게 (temp solution  )
+      // const title = p.title ? (p.title || 'Untitled') : 'Untitled';
+      // const rawContent = p.content || '';
+      // let content = rawContent;
+      // if (rawContent.includes('data:image/') || rawContent.includes('<img')) {
+      //   content = rawContent;
+      // } else {
+      //   content = rawContent.replace(/\n/g, '<br>');
+      // }
 
       const author = p.author || 'Unknown';
       const visibility = (p.visibility || 'private').toUpperCase();
+      // 핵심: p.content를 linkify로 처리해서 URL 자동 링크화
+      //const safeContent = p.content || '';
+      //const contentWithLinks = linkify(safeContent);
+      const contentWithLinks = linkify(p.content || '');
 
       
       return `
         <div class="tile-item">
           <h3>${p.title || 'Untitled'}</h3>
           <div class="post-content-preview" style="line-height:1.6; word-break:break-word;">
-            ${p.content} <!-- This now contains real <a>, <b>, <img> etc. -->
+            ${contentWithLinks}
           </div>
           ${p.imageUrl ? `<img src="${p.imageUrl}" style="max-width:100%; margin:10px 0; border-radius:8px;" loading="lazy">` : ''}
           <p><small>By ${author} • ${dateStr} • ${visibility}</small></p>
