@@ -320,6 +320,16 @@
     color: #333;
     white-space: pre-wrap;      /* \n을 줄바꿈으로 표시 */
     word-wrap: break-word;      /* 긴 단어 줄바꿈 */
+    padding: 0;           /* 패딩 제거 */
+    margin: 0 0 16px 0;   /* 아래 여백만 */
+}
+.post-content-preview > div:first-child {
+  margin-top: 0 !important;   /* 첫 div 위 여백 제거 */
+  padding-top: 0 !important;
+}
+
+.post-content-preview div {
+  margin: 8px 0;   /* div 사이 간격만 */
 }
 
 /* 에디터(작성 중)도 왼쪽 정렬 */
