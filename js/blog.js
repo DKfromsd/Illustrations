@@ -160,11 +160,21 @@ $('js-post-form').addEventListener('submit', async e => {
   //   formData.append('images', blob, `pasted-image-${i + 1}.png`);
   // }
 
+  const body = {
+  title,
+  content: finalHTML,
+  visibility
+  };
+
   try {
     const res = await fetch(`${CLOUD_FUNCTIONS_URL}/createPost`, {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${token}` },
-      body: formData
+      headers: { 'Authorization': `Bearer ${token}` 
+      ,'Content-Type': 'application/json'
+      },
+      //body: formData
+      body: JSON.stringify(body)
+
     });
 
     if (res.ok) {
