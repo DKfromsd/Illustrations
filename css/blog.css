@@ -322,6 +322,17 @@
     word-wrap: break-word;      /* 긴 단어 줄바꿈 */
 }
 
+/* 에디터(작성 중)도 왼쪽 정렬 */
+#post-content[contenteditable="true"],
+#post-content {
+    text-align: left !important;
+    min-height: 100px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
 .tile-item h3 {
     text-align: center !important;     /* 제목 가운데 */
     font-size: 1.7rem;

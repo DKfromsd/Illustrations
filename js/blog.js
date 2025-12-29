@@ -151,7 +151,7 @@ $('js-post-form').addEventListener('submit', async e => {
 // URL auto clickable 
 function linkify(text) {
   const urlRegex = /(https?:\/\/[^\s<]+[^\s<.,;:!?])/g;
-  return text.replace(urlRegex, url => `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #53c924; text-decoration: underline;">${url}</a>`);
+  return text.replace(urlRegex, url => `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #0d8ee4ff; text-decoration: underline;">${url}</a>`);
 }
 
 // Display posts
@@ -175,7 +175,9 @@ async function displayPosts() {
     container.innerHTML = posts.map(p => {
       let dateStr = 'Just now';
       if (p.created_at) {
-        const postDate = new Date(p.created_at);//const d = new Date(p.created_at);
+        //const postDate = new Date(p.created_at); 
+        const cleanTimestamp = p.created_at.replace(/\.\d{3}Z$/, 'Z');
+        const postDate = new Date(cleanTimestamp);
         if (!isNaN(postDate.getTime())) {
           dateStr = postDate.toLocaleString(undefined, {
             year: 'numeric',
@@ -188,21 +190,9 @@ async function displayPosts() {
           );
         }
       }
-      // 제목/내용/작성자 없을 때도 깨지지 않게 (temp solution  )
-      // const title = p.title ? (p.title || 'Untitled') : 'Untitled';
-      // const rawContent = p.content || '';
-      // let content = rawContent;
-      // if (rawContent.includes('data:image/') || rawContent.includes('<img')) {
-      //   content = rawContent;
-      // } else {
-      //   content = rawContent.replace(/\n/g, '<br>');
-      // }
 
       const author = p.author || 'Unknown';
       const visibility = (p.visibility || 'private').toUpperCase();
-      // 핵심: p.content를 linkify로 처리해서 URL 자동 링크화
-      //const safeContent = p.content || '';
-      //const contentWithLinks = linkify(safeContent);
       const contentWithLinks = linkify(p.content || '');
 
       
