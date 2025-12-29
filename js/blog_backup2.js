@@ -68,38 +68,91 @@ onAuthStateChanged(auth, async user => {
 const getToken = async () => auth.currentUser ? await auth.currentUser.getIdToken() : null;
 
 // Create post
+ 
+// PASTE HANDLER: Supports rich text (links) + images
+$('post-content').addEventListener('paste', async (e) => {
+  e.preventDefault();
+  const items = e.clipboardData.items;
+  let hasImage = false;
+
+  for (const item of items) {
+    if (item.type.indexOf('image') !== -1) {
+      hasImage = true;
+      const blob = item.getAsFile();
+      const url = URL.createObjectURL(blob);
+      const img = document.createElement('img');
+      img.src = url;
+      img.style.maxWidth = '100%';
+      img.style.borderRadius = '8px';
+      img.style.margin = '10px 0';
+      img.dataset.tempUrl = url; // mark as temp for upload later
+      //img.dataset.blob = true;
+      $('post-content').appendChild(img);
+      $('post-content').appendChild(document.createElement('br'));
+    }
+  }
+  // If no image, insert rich text (preserves <a>, <b>, etc.)
+  if (!hasImage) {
+    const html = e.clipboardData.getData('text/html');
+    if (html) {
+      document.execCommand('insertHTML', false, html);
+    } else {
+      const text = e.clipboardData.getData('text/plain');
+      document.execCommand('insertText', false, text);
+    }
+  }
+});
+
+// Submit post with images
 $('js-post-form').addEventListener('submit', async e => {
   e.preventDefault();
   const title = $('post-title').value.trim();
-  const content = $('post-content').innerText.trim();
   const visibility = $('js-post-form').querySelector('[name="visibility"]').value;
+  const contentEl = $('post-content');
   const token = await getToken();
+  if (!token) return alert('Please log in');
 
-  if (!token) return alert('Please log in first');
+  const formData = new FormData();
+  formData.append('title', title);
+  formData.append('content', contentEl.innerHTML); // ← This keeps <a href=""> links!
+  formData.append('visibility', visibility);
+
+  // Find temp images and add to form
+  const tempImages = contentEl.querySelectorAll('img[data-temp-url]');
+  for (let i = 0; i < tempImages.length; i++) {
+    const img = tempImages[i];
+    const response = await fetch(img.src);
+    const blob = await response.blob();
+    formData.append('images', blob, `pasted-image-${i + 1}.png`);
+  }
 
   try {
     const res = await fetch(`${CLOUD_FUNCTIONS_URL}/createPost`, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ title, content, visibility })
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: formData
     });
 
     if (res.ok) {
       e.target.reset();
-      $('post-content').innerHTML = '';
-      alert('Post created!');
+      contentEl.innerHTML = '';
+      alert('Post created successfully!');
       displayPosts();
     } else {
-      const data = await res.json();
-      alert('Error: ' + (data.error || 'Unknown'));
+      const err = await res.json();
+      alert('Error: ' + (err.error || 'Failed'));
     }
   } catch (err) {
+    console.error(err);
     alert('Network error');
   }
 });
+
+// URL auto clickable 
+function linkify(text) {
+  const urlRegex = /(https?:\/\/[^\s<]+[^\s<.,;:!?])/g;
+  return text.replace(urlRegex, url => `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #0d8ee4ff; text-decoration: underline;">${url}</a>`);
+}
 
 // Display posts
 async function displayPosts() {
@@ -107,26 +160,11 @@ async function displayPosts() {
   
   try {
     const res = await fetch(`${CLOUD_FUNCTIONS_URL}/getPosts`, {
-      method: 'GET',
-      headers: token ? { 
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      } : {
-        'Content-Type': 'application/json'
-      },
-      // 이게 핵심! preflight 요청도 허용
-      credentials: 'omit'
+      headers: token ? { Authorization: `Bearer ${token}` } : {}
     });
-
-    // 네트워크 오류나 500 등일 때도 여기서 잡아줌
-    if (!res.ok) {
-      console.error('getPosts 응답 오류:', res.status);
-      $('js-posts').innerHTML = '<div class="tile-item" style="color:#c33;">포스트를 불러오지 못했습니다. 새로고침 해보세요.</div>';
-      return;
-    }
+    if (!res.ok) throw new Error('Failed to fetch');
 
     const posts = await res.json();
-
     const container = $('js-posts');
 
     // posts가 없거나 배열이 아닐 때
@@ -134,42 +172,65 @@ async function displayPosts() {
       container.innerHTML = '<div class="tile-item">No posts yet.</div>';
       return;
     }
-
     container.innerHTML = posts.map(p => {
-      // 날짜 안전하게 처리
       let dateStr = 'Just now';
       if (p.created_at) {
-        const d = new Date(p.created_at);
-        if (!isNaN(d.getTime())) {
-          dateStr = d.toLocaleString();
+        //const postDate = new Date(p.created_at); 
+        // const cleanTimestamp = p.created_at.replace(/\.\d{3}Z$/, 'Z');
+        // const postDate = new Date(cleanTimestamp);
+        let postDate;
+        // 1. Timestamp 객체 형태 (가장 흔함)
+        if (p.created_at.seconds != null) {
+          postDate = new Date(p.created_at.seconds * 1000 + Math.round(p.created_at.nanoseconds / 1000000));
         }
-      }
+        // 2. 문자열 형태
+        else if (typeof p.created_at === 'string') {
+          postDate = new Date(p.created_at);
+        }
 
-      // 제목/내용/작성자 없을 때도 깨지지 않게
-      const title = p.title ? (p.title || 'Untitled') : 'Untitled';
-      // const content = p.content ? p.content.replace(/\n/g, '<br>') : '';
-      const rawContent = p.content || '';
+        // Firestore Timestamp 객체인지 확인 (새 포스트)
+        // if (p.created_at && typeof p.created_at.toDate === 'function') {
+        //   postDate = p.created_at.toDate();
+        // } else if (typeof p.created_at === 'string') {
+        //   // 문자열인 경우 (옛날 포스트)
+        //   // 밀리초 제거해서 안전하게 파싱
+        //   const cleanStr = p.created_at.replace(/\.\d{3}Z$/, 'Z');
+        //   postDate = new Date(cleanStr);
+        // } 
+        else {
+          postDate = new Date(p.created_at);
+        }
 
-      let content = rawContent;
-      if (rawContent.includes('data:image/') || rawContent.includes('<img')) {
-        content = rawContent;
-      } else {
-        content = rawContent.replace(/\n/g, '<br>');
+        // 유효한 날짜인지 확인
+        if (!isNaN(postDate.getTime())) {
+          dateStr = postDate.toLocaleString(undefined, {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+          }
+          );
+        }
       }
 
       const author = p.author || 'Unknown';
       const visibility = (p.visibility || 'private').toUpperCase();
+      const contentWithLinks = linkify(p.content || '');
 
+      
       return `
         <div class="tile-item">
-          <h3>${title}</h3>
-          <div class="post-content-preview">${content}</div>
-          ${p.imageUrl ? `<img src="${p.imageUrl}" style="max-width:100%; margin:10px 0; border-radius:8px;" loading="lazy>` : ''}
+          <h3>${p.title || 'Untitled'}</h3>
+          <div class="post-content-preview" style="line-height:1.6; word-break:break-word;">
+            ${contentWithLinks}
+          </div>
+          ${p.imageUrl ? `<img src="${p.imageUrl}" style="max-width:100%; margin:10px 0; border-radius:8px;" loading="lazy">` : ''}
           <p><small>By ${author} • ${dateStr} • ${visibility}</small></p>
         </div>
       `;
     }).join('');
-
   } catch (err) {
     console.error('displayPosts 전체 오류:', err);
     $('js-posts').innerHTML = `

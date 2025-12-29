@@ -5,6 +5,10 @@ const CLOUD_FUNCTIONS_URL = 'https://us-central1-pen-from-the-northwest-blog.clo
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
+// Firebase Storage 초기화 (firebaseConfig 위에 추가)
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js";
+
+
 // THIS IS SAFE TO BE PUBLIC — Google designed it this way
 const firebaseConfig = {
   apiKey: "AIzaSyACJE6BZz3Cvfaahra5U1b-nPY9u-1JG-A",
@@ -17,6 +21,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const storage = getStorage(app);
 
 // DOM shortcuts
 const $ = id => document.getElementById(id);
@@ -110,7 +115,36 @@ $('js-post-form').addEventListener('submit', async e => {
   const visibility = $('js-post-form').querySelector('[name="visibility"]').value;
   const contentEl = $('post-content');
   const token = await getToken();
+
   if (!token) return alert('Please log in');
+
+
+  let finalHTML = contentEl.innerHTML;
+
+  // blob 이미지 찾기
+  const blobImgs = contentEl.querySelectorAll('img[src^="blob:"]');
+  const uploadPromises = [];
+
+  for (const img of blobImgs) {
+    try {
+      const res = await fetch(img.src);
+      const blob = await res.blob();
+      const fileName = `pasted-image-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.png`;
+      const storageRef = ref(storage, `posts/${fileName}`);
+
+      const uploadTask = uploadBytes(storageRef, blob).then(async snapshot => {
+        const url = await getDownloadURL(snapshot.ref);
+        finalHTML = finalHTML.replace(img.src, url);
+      });
+
+      uploadPromises.push(uploadTask);
+    } catch (err) {
+      console.error('Image upload error:', err);
+    }
+  }
+
+  // 모든 이미지 업로드 기다림
+  await Promise.all(uploadPromises);
 
   const formData = new FormData();
   formData.append('title', title);
@@ -118,13 +152,13 @@ $('js-post-form').addEventListener('submit', async e => {
   formData.append('visibility', visibility);
 
   // Find temp images and add to form
-  const tempImages = contentEl.querySelectorAll('img[data-temp-url]');
-  for (let i = 0; i < tempImages.length; i++) {
-    const img = tempImages[i];
-    const response = await fetch(img.src);
-    const blob = await response.blob();
-    formData.append('images', blob, `pasted-image-${i + 1}.png`);
-  }
+  // const tempImages = contentEl.querySelectorAll('img[data-temp-url]');
+  // for (let i = 0; i < tempImages.length; i++) {
+  //   const img = tempImages[i];
+  //   const response = await fetch(img.src);
+  //   const blob = await response.blob();
+  //   formData.append('images', blob, `pasted-image-${i + 1}.png`);
+  // }
 
   try {
     const res = await fetch(`${CLOUD_FUNCTIONS_URL}/createPost`, {
