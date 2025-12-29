@@ -323,6 +323,13 @@
     padding: 0;           /* 패딩 제거 */
     margin: 0 0 16px 0;   /* 아래 여백만 */
 }
+
+/* 첫 번째 빈 div나 <br> 제거 */
+.post-content-preview > div:first-child br:first-child,
+.post-content-preview > div:empty {
+  display: none !important;
+}
+
 .post-content-preview > div:first-child {
   margin-top: 0 !important;   /* 첫 div 위 여백 제거 */
   padding-top: 0 !important;
@@ -330,6 +337,11 @@
 
 .post-content-preview div {
   margin: 8px 0;   /* div 사이 간격만 */
+}
+
+.post-content-preview img {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 /* 에디터(작성 중)도 왼쪽 정렬 */
