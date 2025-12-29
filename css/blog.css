@@ -318,7 +318,7 @@
     line-height: 1.8;
     font-size: 1.1rem;
     color: #333;
-    white-space: pre-wrap;      /* \n을 줄바꿈으로 표시 */
+    /*white-space: pre-wrap;    \n을 줄바꿈으로 표시 */
     word-wrap: break-word;      /* 긴 단어 줄바꿈 */
     padding: 0;           /* 패딩 제거 */
     margin: 0 0 16px 0;   /* 아래 여백만 */

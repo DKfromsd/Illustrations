@@ -219,11 +219,13 @@ $('js-post-form').addEventListener('submit', async e => {
   }
 
   await Promise.all(uploadPromises);
+  // 텍스트 URL을 링크로 변환 (기존 태그 보호)
+  const contentToSave = enhancedLinkify(finalHTML);
 
   // JSON으로 보내기 (백엔드에서 req.body로 받음)
   const body = {
     title,
-    content: finalHTML,  // <-- 실제 URL로 교체된 HTML
+    content: contentToSave, //finalHTML,  // <-- 실제 URL로 교체된 HTML
     visibility
   };
 
@@ -253,9 +255,18 @@ $('js-post-form').addEventListener('submit', async e => {
 });
 
 // URL auto clickable 
-function linkify(text) {
-  const urlRegex = /(https?:\/\/[^\s<]+[^\s<.,;:!?])/g;
-  return text.replace(urlRegex, url => `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #0d8ee4ff; text-decoration: underline;">${url}</a>`);
+// function linkify(text) {
+//   const urlRegex = /(https?:\/\/[^\s<]+[^\s<.,;:!?])/g;
+//   return text.replace(urlRegex, url => `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #0d8ee4ff; text-decoration: underline;">${url}</a>`);
+// }
+function enhancedLinkify(html) {
+    // 1. 이미 <a> 태그나 <img> 태그 안에 있는 URL은 건드리지 않기 위해 
+    // HTML을 분할하여 처리하거나, 부정 후방 탐색을 지원하는 정규식을 사용합니다.
+    const urlRegex = /(?<!href="|src="|">)(https?:\/\/[^\s<]+[^<.,;:!?\s])/g;
+    
+    return html.replace(urlRegex, url => {
+        return `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #0d8ee4ff; text-decoration: underline;">${url}</a>`;
+    });
 }
 
 // Display posts
@@ -321,16 +332,16 @@ async function displayPosts() {
 
       const author = p.author || 'Unknown';
       const visibility = (p.visibility || 'private').toUpperCase();
-      const contentWithLinks = linkify(p.content || '');
+      //const contentWithLinks = linkify(p.content || '');
+      const finalContent = p.content || '';
 
       
       return `
         <div class="tile-item">
           <h3>${p.title || 'Untitled'}</h3>
           <div class="post-content-preview" style="line-height:1.6; word-break:break-word;">
-            ${contentWithLinks}
+            ${finalContent}
           </div>
-          ${p.imageUrl ? `<img src="${p.imageUrl}" style="max-width:100%; margin:10px 0; border-radius:8px;" loading="lazy">` : ''}
           <p><small>By ${author} • ${dateStr} • ${visibility}</small></p>
         </div>
       `;
