@@ -109,8 +109,84 @@ $('post-content').addEventListener('paste', async (e) => {
 });
 
 // Submit post with images
+
+// $('js-post-form').addEventListener('submit', async e => {
+//   e.preventDefault();
+//   const title = $('post-title').value.trim();
+//   const visibility = $('js-post-form').querySelector('[name="visibility"]').value;
+//   const contentEl = $('post-content');
+//   const token = await getToken();
+
+//   if (!token) return alert('Please log in');
+
+
+//   let finalHTML = contentEl.innerHTML;
+
+//   // blob 이미지 찾기
+//   const blobImgs = contentEl.querySelectorAll('img[src^="blob:"]');
+//   const uploadPromises = [];
+
+//   for (const img of blobImgs) {
+//     try {
+//       const res = await fetch(img.src);
+//       const blob = await res.blob();
+//       const fileName = `pasted-image-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.png`;
+//       const storageRef = ref(storage, `posts/${fileName}`);
+
+//       const uploadTask = uploadBytes(storageRef, blob).then(async snapshot => {
+//         const url = await getDownloadURL(snapshot.ref);
+//         finalHTML = finalHTML.replace(img.src, url);
+//       });
+
+//       uploadPromises.push(uploadTask);
+//     } catch (err) {
+//       console.error('Image upload error:', err);
+//     }
+//   }
+
+//   // 모든 이미지 업로드 기다림
+//   await Promise.all(uploadPromises);
+
+//   const formData = new FormData();
+//   formData.append('title', title);
+//   formData.append('content',finalHTML); // contentEl.innerHTML); // ← This keeps <a href=""> links!
+//   formData.append('visibility', visibility);
+
+//   // Find temp images and add to form
+//   // const tempImages = contentEl.querySelectorAll('img[data-temp-url]');
+//   // for (let i = 0; i < tempImages.length; i++) {
+//   //   const img = tempImages[i];
+//   //   const response = await fetch(img.src);
+//   //   const blob = await response.blob();
+//   //   formData.append('images', blob, `pasted-image-${i + 1}.png`);
+//   // 
+
+//   try {
+//     const res = await fetch(`${CLOUD_FUNCTIONS_URL}/createPost`, {
+//       method: 'POST',
+//       headers: { 'Authorization': `Bearer ${token}` 
+//       },
+//       body: formData
+
+//     });
+
+//     if (res.ok) {
+//       e.target.reset();
+//       contentEl.innerHTML = '';
+//       alert('Post created successfully!');
+//       displayPosts();
+//     } else {
+//       const err = await res.json();
+//       alert('Error: ' + (err.error || 'Failed'));
+//     }
+//   } catch (err) {
+//     console.error(err);
+//     alert('Network error');
+//   }
+// });
 $('js-post-form').addEventListener('submit', async e => {
   e.preventDefault();
+
   const title = $('post-title').value.trim();
   const visibility = $('js-post-form').querySelector('[name="visibility"]').value;
   const contentEl = $('post-content');
@@ -118,10 +194,9 @@ $('js-post-form').addEventListener('submit', async e => {
 
   if (!token) return alert('Please log in');
 
-
   let finalHTML = contentEl.innerHTML;
 
-  // blob 이미지 찾기
+  // blob 이미지 업로드 및 URL 교체
   const blobImgs = contentEl.querySelectorAll('img[src^="blob:"]');
   const uploadPromises = [];
 
@@ -129,44 +204,37 @@ $('js-post-form').addEventListener('submit', async e => {
     try {
       const res = await fetch(img.src);
       const blob = await res.blob();
-      const fileName = `pasted-image-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.png`;
+      const fileName = `pasted-${Date.now()}-${Math.random().toString(36).substring(7)}.png`;
       const storageRef = ref(storage, `posts/${fileName}`);
 
-      const uploadTask = uploadBytes(storageRef, blob).then(async snapshot => {
+      const task = uploadBytes(storageRef, blob).then(async snapshot => {
         const url = await getDownloadURL(snapshot.ref);
         finalHTML = finalHTML.replace(img.src, url);
       });
 
-      uploadPromises.push(uploadTask);
+      uploadPromises.push(task);
     } catch (err) {
-      console.error('Image upload error:', err);
+      console.error('Upload error:', err);
     }
   }
 
-  // 모든 이미지 업로드 기다림
   await Promise.all(uploadPromises);
 
-  const formData = new FormData();
-  formData.append('title', title);
-  formData.append('content',finalHTML); // contentEl.innerHTML); // ← This keeps <a href=""> links!
-  formData.append('visibility', visibility);
-
-  // Find temp images and add to form
-  // const tempImages = contentEl.querySelectorAll('img[data-temp-url]');
-  // for (let i = 0; i < tempImages.length; i++) {
-  //   const img = tempImages[i];
-  //   const response = await fetch(img.src);
-  //   const blob = await response.blob();
-  //   formData.append('images', blob, `pasted-image-${i + 1}.png`);
-  // 
+  // JSON으로 보내기 (백엔드에서 req.body로 받음)
+  const body = {
+    title,
+    content: finalHTML,  // <-- 실제 URL로 교체된 HTML
+    visibility
+  };
 
   try {
     const res = await fetch(`${CLOUD_FUNCTIONS_URL}/createPost`, {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${token}` 
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
       },
-      body: formData
-
+      body: JSON.stringify(body)
     });
 
     if (res.ok) {
