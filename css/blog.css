@@ -90,16 +90,25 @@
     }
 }
 
-.layout-wr {
+/* .layout-wr {
     background: rgba(255, 255, 255, 0.9);
     margin: 20px auto;
     padding: 16px;
-    max-width: 700px;
+    width: 98%;
+    max-width: 1200px;
     border-radius: 8px;
     width: 90%;
     box-sizing: border-box;
+} */
+.layout-wr {
+    background: rgba(255, 255, 255, 0.9);
+    margin: 20px auto;
+    padding: 24px 24px;     /* 좌우 패딩으로 자연스러운 여백 확보 */
+    width: 100%;            /* 또는 삭제 (100% 기본값) */
+    max-width: 1200px;      /* 너무 넓지 않게 제한 (필요시) */
+    border-radius: 8px;
+    box-sizing: border-box;
 }
-
 @media (max-width: 540px) {
     .layout-wr {
         max-width: 100%;
