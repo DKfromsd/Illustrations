@@ -433,8 +433,7 @@ const open_Gemini = () => {
     return;
   }
   window.open(
-    //'https://gemini-animator2.mickeyfromsd.workers.dev/'
-    'https://backend-v2-7az.pages.dev/'
+    'https://gemini-animator2.mickeyfromsd.workers.dev/'
     ,'_blank'
     ,'width=1200,height=800,scrollbars=yes,resizable=yes'
   );
