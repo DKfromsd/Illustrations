@@ -38,6 +38,53 @@
     text-align: left;
 }
 
+/* js-main-desc 영역에 xmas.jpg 배경 넣기 (모든 해상도 공통) */
+#js-main-desc.two-col-desc {
+    position: relative;
+    padding: 40px 40px;
+    min-height: 320px;
+    background-color: #fff;
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid #ececf1;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+}
+
+#js-main-desc.two-col-desc::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: url('../img/xmas.jpg') no-repeat 14% center;
+    background-size: cover;
+    border-top-right-radius: 24px;
+    border-bottom-right-radius: 24px;
+    z-index: 1;
+}
+
+#js-main-desc.two-col-desc::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right,
+        rgba(255,255,255,0.92) 0%,
+        rgba(255,255,255,0.92) 55%,
+        rgba(255,255,255,0.35) 80%,
+        rgba(255,255,255,0) 100%
+    );
+    border-radius: inherit;
+    z-index: 2;
+}
+
+#js-main-desc.two-col-desc ul,
+#js-main-desc.two-col-desc li,
+#js-main-desc.two-col-desc p {
+    position: relative;
+    z-index: 3;
+}
+
 .one-col-wr {
     margin-top: 64px;
     padding-top: 96px;
@@ -71,7 +118,7 @@
 }
 
 .tile-wr {
-    margin: 18px 32px;  /* edit if necessary*/
+    margin: 18px 69px;  /* edit if necessary*/
 }
 
 .tile {
@@ -82,6 +129,8 @@
     width: 440px; /* Edit necessary */
     height: 450px; /* Edit necessary */
     box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.04);
+    position:releative;
+    overflow:hidden;
 }
 
 
@@ -112,6 +161,8 @@
     line-height: 1.1428571429;
     letter-spacing: .007em;
     font-family: "SF_Pro_Display_Semibold", sans-serif;
+    color: #1d1d1f;
+    z-index: 2;
 }
   
 .tile-text {
@@ -122,6 +173,9 @@
     letter-spacing: -0.022em;
     font-family: "SF_Pro_Text_Regular", sans-serif;
     font-style: normal;
+    color: #1d1d1f;                    /* 진한 블랙 */
+    z-index: 2;
+    font-weight: 450;
 }
 
 .tile-text-bold {
@@ -143,7 +197,7 @@
     height: 48px;
 }
 
-.thumb-design {
+/* .thumb-design {
     background: url('../img/thumb-design.jpg');  
     background-repeat: no-repeat;
     background-position: bottom right;
@@ -157,6 +211,53 @@
     background-position: bottom right;
     background-size: cover;
 
+} */
+
+/* .thumb-design {
+    background: url('../img/thumb-design-lightgray.jpg') no-repeat bottom right;
+    background-size: cover;
+    opacity: 0.12;  
+}
+
+.thumb-branding {
+    background: url('../img/thumb-branding-lightgray.jpg') no-repeat bottom right;
+    background-size: cover;
+    opacity: 0.12;
+} */
+
+/* .thumb-design {
+    filter: grayscale(85%) brightness(1.6) contrast(0.65) sepia(10%);
+    opacity: 0.08;
+} */
+/* ===== 배경 이미지 (아주 연하게, 아래쪽만) ===== */
+/* ===== thumb-design ===== */
+/* .thumb-design {
+    background: url('../img/thumb-design.jpg') no-repeat bottom right;
+    background-size: cover;
+    filter: grayscale(100%) brightness(1.45) contrast(0.8);
+    opacity: 0.22;        
+}
+
+.thumb-branding {
+    background: url('../img/thumb-branding.jpg') no-repeat bottom right;
+    background-size: cover;
+    filter: grayscale(100%) brightness(1.5) contrast(0.7);
+    opacity: 0.25;
+}
+ */
+
+.tile.thumb-design {
+    background: 
+        linear-gradient(rgba(255,255,255,0.62), rgba(255,255,255,0.92)), /* 흰색 오버레이 */
+        url('../img/thumb-design.jpg') no-repeat bottom right;
+    background-size: cover, cover;
+}
+
+.tile.thumb-branding {
+    background: 
+        linear-gradient(rgba(255,255,255,0.55), rgba(255,255,255,0.92)),
+        url('../img/thumb-branding.jpg') no-repeat bottom right;
+    background-size: cover, cover;
 }
 
 .thumb-dollar {
@@ -184,11 +285,36 @@
         margin-bottom: 16px;
     }
 
-    .two-col-desc {
+    /* .two-col-desc {
         width: 100%;
         font-size: 17px;
 
+    } */
+    .two-col-desc {
+        width: 100%;
+        font-size: 17px;
     }
+
+    #js-main-desc.two-col-desc {
+        padding: 24px;
+        min-height: 260px;
+    }
+
+    #js-main-desc.two-col-desc::before {
+        width: 78%;
+    }
+
+    #js-main-desc.two-col-desc ul {
+        margin-left: 0;
+        padding-left: 0;
+        list-style: none;
+    }
+
+    #js-main-desc.two-col-desc li {
+        margin-bottom: 18px;
+        padding-left: 4px;
+    }
+
 
     .tile-list-wr {
         padding-top: 16px;
